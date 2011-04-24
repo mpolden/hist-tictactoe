@@ -1,6 +1,7 @@
 package no.hist.aitel.android.tictactoe;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -8,15 +9,22 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class GameView extends View {
-    private Paint mLinePaint;
+
+    
+    private Paint linePaint;
+    private Paint bmpPaint;
+
+    private Bitmap bmpPlayer1;
+    private Bitmap bmpPlayer2;
 
     private ICellListener cellListener;
 
     private int mSxy;
     private int mOffsetX;
     private int mOffsetY;
+    private int boardSize = 5;
 
-    private static final int MARGIN = 4;
+    private static final int MARGIN = 0;
 
     private final Rect mDstRect = new Rect();
 
@@ -28,24 +36,24 @@ public class GameView extends View {
         super(context, attrs);
         requestFocus();
 
-        mLinePaint = new Paint();
-        mLinePaint.setColor(0xFFFFFFFF);
-        mLinePaint.setStrokeWidth(5);
-        mLinePaint.setStyle(Paint.Style.STROKE);
+        linePaint = new Paint();
+        linePaint.setColor(0xFFFFFFFF);
+        linePaint.setStrokeWidth(3);
+        linePaint.setStyle(Paint.Style.STROKE);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        int sx = (w - 2 * MARGIN) / 3;
-        int sy = (h - 2 * MARGIN) / 3;
+        int sx = (w - 2 * MARGIN) / boardSize;
+        int sy = (h - 2 * MARGIN) / boardSize;
 
         int size = sx < sy ? sx : sy;
 
         mSxy = size;
-        mOffsetX = (w - 3 * size) / 2;
-        mOffsetY = (h - 3 * size) / 2;
+        mOffsetX = (w - boardSize * size) / 2;
+        mOffsetY = (h - boardSize * size) / 2;
 
         mDstRect.set(MARGIN, MARGIN, size - MARGIN, size - MARGIN);
     }
@@ -55,13 +63,13 @@ public class GameView extends View {
         super.onDraw(canvas);
 
         int sxy = mSxy;
-        int s3 = sxy * 3;
+        int sn = sxy * boardSize;
         int x7 = mOffsetX;
         int y7 = mOffsetY;
 
-        for (int i = 0, k = sxy; i < 2; i++, k += sxy) {
-            canvas.drawLine(x7, y7 + k, x7 + s3 - 1, y7 + k, mLinePaint);
-            canvas.drawLine(x7 + k, y7, x7 + k, y7 + s3 - 1, mLinePaint);
+        for (int i = 0, k = sxy; i < boardSize - 1; i++, k += sxy) {
+            canvas.drawLine(x7, y7 + k, x7 + sn - 1, y7 + k, linePaint);
+            canvas.drawLine(x7 + k, y7, x7 + k, y7 + sn - 1, linePaint);
         }
     }
 
