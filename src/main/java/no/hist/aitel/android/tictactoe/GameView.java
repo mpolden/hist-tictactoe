@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 public class GameView extends View {
 
-    public static final long FPS_MS = 1000/2;
+    public static final long FPS_MS = 1000 / 2;
 
     public enum State {
         UNKNOWN(-3),
@@ -102,7 +102,7 @@ public class GameView extends View {
         linePaint.setStrokeWidth(5);
         linePaint.setStyle(Paint.Style.STROKE);
 
-
+        setCurrentPlayer(State.PLAYER1);
     }
 
     public State[] getData() {
@@ -198,6 +198,7 @@ public class GameView extends View {
                     if (blinkDisplayOff) {
                         continue;
                     }
+                    //v = data[k];
                     v = selectedValue;
                 } else {
                     v = data[k];
@@ -222,43 +223,53 @@ public class GameView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
-        Toast.makeText(getContext(), "TOUCHED", Toast.LENGTH_SHORT);
-        if(action == MotionEvent.ACTION_DOWN) {
+
+        if (action == MotionEvent.ACTION_DOWN) {
             return true;
-        } else if(action == MotionEvent.ACTION_UP) {
+        } else if (action == MotionEvent.ACTION_UP) {
             int x = (int) event.getX();
             int y = (int) event.getY();
 
             int sxy = this.sxy;
             x = (x - MARGIN) / sxy;
             y = (y - MARGIN) / sxy;
-            
-            Toast.makeText(getContext(), String.valueOf(x+boardSize*y), Toast.LENGTH_LONG).show();
-            setCell(x+boardSize*y, State.PLAYER1);
-            /*if(isEnabled() && x >= 0 && x < boardSize && y >= 0 & y < boardSize) {
-                int cell  = x + boardSize * y;
-                
+
+            Toast.makeText(getContext(), String.valueOf(x + boardSize * y), Toast.LENGTH_SHORT).show();
+            //setCell(x + boardSize * y, State.PLAYER1);
+            if (isEnabled() && x >= 0 && x < boardSize && y >= 0 & y < boardSize) {
+                int cell = x + boardSize * y;
+
                 State state = cell == selectedCell ? selectedValue : data[cell];
                 state = state == State.EMPTY ? currentPlayer : State.EMPTY;
 
-                stopBlink();
+                //stopBlink();
 
                 selectedCell = cell;
                 selectedValue = state;
-                blinkDisplayOff = false;
-                blinkRect.set(MARGIN + x * sxy, MARGIN + y * sxy,
-                               MARGIN + (x + 1) * sxy, MARGIN + (y + 1) * sxy);
-
-                if (state != State.EMPTY) {
-                    // Start the blinker
-                    handler.sendEmptyMessageDelayed(MSG_BLINK, FPS_MS);
+                if (data[selectedCell] == State.EMPTY) {
+                    setCell(selectedCell, selectedValue);
+                    if (currentPlayer == State.PLAYER1) {
+                        currentPlayer = State.PLAYER2;
+                    } else {
+                        currentPlayer = State.PLAYER1;
+                    }
                 }
 
-                if(cellListener != null) {
+                //blinkDisplayOff = false;
+                //blinkRect.set(MARGIN + x * sxy, MARGIN + y * sxy,
+                //               MARGIN + (x + 1) * sxy, MARGIN + (y + 1) * sxy);
+
+                //if (state != State.EMPTY) {
+                // Start the blinker
+                //    handler.sendEmptyMessageDelayed(MSG_BLINK, FPS_MS);
+                //}
+
+                if (cellListener != null) {
                     cellListener.onCellSelected();
                 }
-                
-            }*/
+
+
+            }
 
             return true;
         }

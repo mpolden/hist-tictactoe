@@ -14,7 +14,7 @@ public class GameActivity extends Activity {
         setContentView(R.layout.game);
 
         gameView = (GameView) findViewById(R.id.game_view);
-        gameView.setBoardSize(4);
+        gameView.setBoardSize(3);
         gameView.setFocusable(true);
         gameView.setFocusableInTouchMode(true);
         gameView.setCellListener(new MyCellListener());
