@@ -61,7 +61,7 @@ public class GameView extends View {
     private int offsetY;
     private int boardSize;
 
-    private State[] data;
+    private State[][] data;
     private int selectedCell = -1;
     private State selectedValue = State.EMPTY;
     private State currentPlayer = State.UNKNOWN;
@@ -105,12 +105,12 @@ public class GameView extends View {
         setCurrentPlayer(State.PLAYER1);
     }
 
-    public State[] getData() {
+    public State[][] getData() {
         return data;
     }
 
-    public void setCell(int cellIndex, State value) {
-        data[cellIndex] = value;
+    public void setCell(int x, int y, State value) {
+        data[x][y] = value;
         invalidate();
     }
 
@@ -144,9 +144,11 @@ public class GameView extends View {
 
     public void setBoardSize(int boardSize) {
         this.boardSize = boardSize;
-        data = new State[boardSize * boardSize];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = State.EMPTY;
+        data = new State[boardSize][boardSize];
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                data[i][j] = State.EMPTY;
+            }
         }
     }
 
