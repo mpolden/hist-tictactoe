@@ -8,6 +8,9 @@ import static no.hist.aitel.android.tictactoe.GameState.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Test case for GameBoard
+ */
 public class GameBoardTest {
 
     @Test
@@ -104,7 +107,6 @@ public class GameBoardTest {
         assertEquals(NEUTRAL, b.getState());
         assertEquals(VALID_MOVE, b.put(4, 1, PLAYER2));
         assertEquals(PLAYER2, b.get(4, 1));
-        System.out.println(b.toString());
         assertEquals(WIN, b.getState());
     }
 

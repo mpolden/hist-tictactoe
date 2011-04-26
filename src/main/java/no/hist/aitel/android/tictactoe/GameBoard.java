@@ -45,7 +45,7 @@ public class GameBoard {
      * @param p Player to set
      * @return Game state
      */
-    public GameState put(int y, int x, GamePlayer p) {
+    public GameState put(int x, int y, GamePlayer p) {
         if (x < 0 || x >= board.length) {
             throw new IllegalArgumentException(
                     String.format("x must in range(0,%d)", board.length - 1));
@@ -77,7 +77,7 @@ public class GameBoard {
      * @param y Y coordinate
      * @return Player in the given position
      */
-    public GamePlayer get(int y, int x) {
+    public GamePlayer get(int x, int y) {
         if (x < 0 || x >= board.length) {
             throw new IllegalArgumentException(
                     String.format("x must be in range(0,%d)", board.length - 1));
