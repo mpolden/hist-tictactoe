@@ -46,6 +46,14 @@ public class GameBoard {
      * @return Game state
      */
     public GameState put(int x, int y, GamePlayer p) {
+        if (x < 0 || x >= board.length) {
+            throw new IllegalArgumentException(
+                    String.format("x must in range(0,%d)", board.length - 1));
+        }
+        if (y < 0 || y >= board[x].length) {
+            throw new IllegalArgumentException(
+                    String.format("y must be in range(0,%d)", board[x].length - 1));
+        }
         if (board[x][y] == GamePlayer.EMPTY) {
             board[x][y] = p;
             this.x = x;
@@ -67,10 +75,12 @@ public class GameBoard {
      */
     public GamePlayer get(int x, int y) {
         if (x < 0 || x >= board.length) {
-            throw new IllegalArgumentException(String.format("x must be between 0 and %s", board.length - 1));
+            throw new IllegalArgumentException(
+                    String.format("x must be in range(0,%d)", board.length - 1));
         }
         if (y < 0 || y >= board[x].length) {
-            throw new IllegalArgumentException(String.format("y must be between 0 and %s", board[x].length - 1));
+            throw new IllegalArgumentException(
+                    String.format("y must be in range(0,%d)", board[x].length - 1));
         }
         return board[x][y];
     }
@@ -120,7 +130,7 @@ public class GameBoard {
             }
         }
         // Draw
-        if (moveCount == (inRow ^ 2) - 1) {
+        if (moveCount == Math.pow(inRow, 2)) {
             return GameState.DRAW;
         }
         return GameState.NEUTRAL;
