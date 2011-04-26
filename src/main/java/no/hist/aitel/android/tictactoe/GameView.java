@@ -230,13 +230,6 @@ public class GameView extends View {
                         currentPlayer = GameState.PLAYER1;
                     }
                 }
-                //blinkDisplayOff = false;
-                //blinkRect.set(MARGIN + x * sxy, MARGIN + y * sxy,
-                //               MARGIN + (x + 1) * sxy, MARGIN + (y + 1) * sxy);
-                //if (state != State.EMPTY) {
-                // Start the blinker
-                //    handler.sendEmptyMessageDelayed(MSG_BLINK, FPS_MS);
-                //}
                 if (cellListener != null) {
                     cellListener.onCellSelected();
                 }
