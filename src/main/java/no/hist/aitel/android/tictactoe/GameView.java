@@ -62,11 +62,6 @@ public class GameView extends View {
         setCurrentPlayer(GamePlayer.PLAYER1);
     }
 
-    public void setCell(int x, int y, GamePlayer player) {
-        controller.put(x, y, player); // XXX: Check getState and determine winner
-        invalidate();
-    }
-
     public void setCellListener(ICellListener cellListener) {
         this.cellListener = cellListener;
     }
@@ -99,6 +94,30 @@ public class GameView extends View {
         this.controller = new GameBoard(boardSize);
     }
 
+    public GameBoard getController() {
+        return controller;
+    }
+
+    public int getBoardSize() {
+        return boardSize;
+    }
+
+    public int getSelectedCell() {
+        return selectedCell;
+    }
+
+    public void setSelectedCell(int selectedCell) {
+        this.selectedCell = selectedCell;
+    }
+
+    public GamePlayer getSelectedValue() {
+        return selectedValue;
+    }
+
+    public void setSelectedValue(GamePlayer selectedValue) {
+        this.selectedValue = selectedValue;
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -118,6 +137,10 @@ public class GameView extends View {
         int h = MeasureSpec.getSize(heightMeasureSpec);
         int d = w == 0 ? h : h == 0 ? w : w < h ? w : h;
         setMeasuredDimension(d, d);
+    }
+
+    public int getSxy() {
+        return sxy;
     }
 
     @Override
@@ -155,7 +178,7 @@ public class GameView extends View {
             }
         }
     }
-
+    /*
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
@@ -191,7 +214,7 @@ public class GameView extends View {
         }
         return false;
     }
-
+    */
     private Bitmap getResBitmap(int bmpResId) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inDither = false;
