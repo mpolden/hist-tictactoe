@@ -92,6 +92,7 @@ public class GameView extends View {
 
     public void makeBoard(int boardSize) {
         this.controller = new GameBoard(boardSize);
+        this.controller.setInRow(boardSize);
     }
 
     public GameBoard getController() {

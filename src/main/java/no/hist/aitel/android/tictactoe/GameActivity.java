@@ -5,17 +5,21 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class GameActivity extends Activity {
 
     private GameView gameView;
     private GameView.ICellListener cellListener;
+    private TextView status;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.game);
+        status = (TextView) findViewById(R.id.status);
+        status.setText("Player 1's turn");
         gameView = (GameView) findViewById(R.id.game_view);
         gameView.setFocusable(true);
         gameView.setFocusableInTouchMode(true);
@@ -42,10 +46,14 @@ public class GameActivity extends Activity {
                         gameView.setSelectedValue(state);
                         if (gameView.getController().get(x, y) == GamePlayer.EMPTY) {
                             setCell(x, y, state);
-                            if (gameView.getCurrentPlayer() == GamePlayer.PLAYER1) {
-                                gameView.setCurrentPlayer(GamePlayer.PLAYER2);
-                            } else {
-                                gameView.setCurrentPlayer(GamePlayer.PLAYER1);
+                            if (gameView.getController().getState() == GameState.NEUTRAL) {
+                                if (gameView.getCurrentPlayer() == GamePlayer.PLAYER1) {
+                                    gameView.setCurrentPlayer(GamePlayer.PLAYER2);
+                                    status.setText("Player 2's turn");
+                                } else {
+                                    gameView.setCurrentPlayer(GamePlayer.PLAYER1);
+                                    status.setText("Player 1's turn");
+                                }
                             }
                         }
                         if (cellListener != null) {
@@ -60,14 +68,18 @@ public class GameActivity extends Activity {
     }
 
     public void setCell(int x, int y, GamePlayer player) {
-        if(gameView.getController().put(x, y, player) == GameState.VALID_MOVE) {
+        if (gameView.getController().put(x, y, player) == GameState.VALID_MOVE) {
             GameState s = gameView.getController().getState();
             switch (s) {
                 case WIN: {
-                    
+                    gameView.setEnabled(false);
+                    status.setText(player.toString() + " WINS!");
+                    break;
                 }
                 case DRAW: {
-
+                    gameView.setEnabled(false);
+                    status.setText("DRAW");
+                    break;
                 }
             }
         }
