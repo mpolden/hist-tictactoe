@@ -12,14 +12,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
-                android:background="@drawable/button_newgame"></Button>
+                android:background="@drawable/button_newgame"/>
         <Button android:id="@+id/button_settings"
                 android:text="Settings"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
-                android:background="@drawable/button_settings"></Button>
+                android:background="@drawable/button_settings"/>
     </LinearLayout>
 
 </LinearLayout>

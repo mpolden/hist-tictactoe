@@ -5,7 +5,7 @@ public enum GamePlayer {
     EMPTY(0),
     PLAYER1(1),
     PLAYER2(2);
-    private int value;
+    private final int value;
 
     GamePlayer(int value) {
         this.value = value;

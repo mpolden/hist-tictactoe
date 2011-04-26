@@ -20,7 +20,8 @@ public class GameBoard {
     /**
      * Create an empty board of the given size
      *
-     * @param size Board size
+     * @param size  Board size
+     * @param inRow Number of required squares in row
      */
     public GameBoard(final int size, final int inRow) {
         if (size < MIN_BOARD_SIZE) {

@@ -6,7 +6,7 @@ public enum GameState {
     NEUTRAL(3),
     VALID_MOVE(4),
     INVALID_MOVE(5);
-    private int value;
+    private final int value;
 
     GameState(int value) {
         this.value = value;

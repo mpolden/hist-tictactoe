@@ -10,14 +10,12 @@ import android.view.View;
 
 public class GameView extends View {
 
-    public static final String PREFS_NAME = "Prefs";
+    private static final String PREFS_NAME = "Prefs";
     private static final int MARGIN = 0;
     private Paint linePaint;
     private Paint bmpPaint;
     private Bitmap bmpPlayer1;
     private Bitmap bmpPlayer2;
-    private Drawable drawableBg;
-    private ICellListener cellListener;
     private int sxy;
     private int offsetX;
     private int offsetY;
@@ -45,7 +43,7 @@ public class GameView extends View {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
         boardSize = settings.getInt("boardSize", 3);
         makeBoard(boardSize);
-        drawableBg = getResources().getDrawable(R.drawable.lib_bg);
+        Drawable drawableBg = getResources().getDrawable(R.drawable.lib_bg);
         setBackgroundDrawable(drawableBg);
         bmpPlayer1 = getResBitmap(R.drawable.cross);
         bmpPlayer2 = getResBitmap(R.drawable.circle);
@@ -61,7 +59,7 @@ public class GameView extends View {
     }
 
     public void setCellListener(ICellListener cellListener) {
-        this.cellListener = cellListener;
+        ICellListener cellListener1 = cellListener;
     }
 
     public int getSelection() {
