@@ -5,7 +5,8 @@ public enum GameState {
     WIN(-2),
     EMPTY(0),
     PLAYER1(1),
-    PLAYER2(2);
+    PLAYER2(2),
+    DRAW(3);
     private int value;
 
     GameState(int value) {
