@@ -6,7 +6,10 @@ public enum GameState {
     EMPTY(0),
     PLAYER1(1),
     PLAYER2(2),
-    DRAW(3);
+    DRAW(3),
+    NEUTRAL(4),
+    VALID_MOVE(5),
+    INVALID_MOVE(6);
     private int value;
 
     GameState(int value) {
