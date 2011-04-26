@@ -7,11 +7,14 @@ import com.google.common.base.Strings;
  */
 public class GameBoard {
 
-    private GamePlayer[][] board;
+    private static final int MIN_BOARD_SIZE = 3;
+    private static final int MIN_IN_ROW = 3;
+
     private int inRow;
     private int moveCount;
     private int x;
     private int y;
+    private GamePlayer[][] board;
     private GamePlayer player;
 
     /**
@@ -19,22 +22,22 @@ public class GameBoard {
      *
      * @param size Board size
      */
-    public GameBoard(final int size) {
+    public GameBoard(final int size, final int inRow) {
+        if (size < MIN_BOARD_SIZE) {
+            throw new IllegalArgumentException(
+                    String.format("Minimum board size is %d", MIN_BOARD_SIZE));
+        }
+        if (inRow < MIN_IN_ROW) {
+            throw new IllegalArgumentException(
+                    String.format("Minimum in row is %d", MIN_IN_ROW));
+        }
         this.board = new GamePlayer[size][size];
+        this.inRow = inRow;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 this.board[i][j] = GamePlayer.EMPTY;
             }
         }
-    }
-
-    /**
-     * Set how many required pieces in row
-     *
-     * @param inRow Number of pieces in row
-     */
-    public void setInRow(int inRow) {
-        this.inRow = inRow;
     }
 
     /**
@@ -169,7 +172,7 @@ public class GameBoard {
     public String toString() {
         final StringBuilder out = new StringBuilder();
         final int fieldWidth = 3;
-        final int rowLength = board.length > 0 ? board[0].length : 0;
+        final int rowLength = board[0].length;
         final StringBuilder separator = new StringBuilder();
         for (int i = 0; i < rowLength; i++) {
             separator.append("+");
@@ -179,7 +182,7 @@ public class GameBoard {
         for (int i = 0; i < board.length; i++) {
             out.append(separator);
             out.append("+\n| ");
-            for (int j = 0; j < board[i].length; j++) {
+            for (int j = 0; j < rowLength; j++) {
                 out.append(playerToSymbol(board[j][i]));
                 if (j != lastIdx) {
                     out.append(" | ");

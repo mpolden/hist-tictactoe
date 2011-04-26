@@ -6,9 +6,7 @@ import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 public class GameView extends View {
 
@@ -91,8 +89,7 @@ public class GameView extends View {
     }
 
     public void makeBoard(int boardSize) {
-        this.controller = new GameBoard(boardSize);
-        this.controller.setInRow(boardSize);
+        this.controller = new GameBoard(boardSize, boardSize);
     }
 
     public GameBoard getController() {
@@ -179,6 +176,7 @@ public class GameView extends View {
             }
         }
     }
+
     /*
     @Override
     public boolean onTouchEvent(MotionEvent event) {
