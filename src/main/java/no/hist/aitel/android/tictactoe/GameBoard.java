@@ -2,14 +2,17 @@ package no.hist.aitel.android.tictactoe;
 
 import com.google.common.base.Strings;
 
+/**
+ * This class handles board logic
+ */
 public class GameBoard {
 
+    private GamePlayer[][] board;
     private int inRow;
     private int moveCount;
-    private GameState[][] board;
     private int x;
     private int y;
-    private GameState player;
+    private GamePlayer player;
 
     /**
      * Create an empty board of the given size
@@ -17,10 +20,10 @@ public class GameBoard {
      * @param size Board size
      */
     public GameBoard(final int size) {
-        this.board = new GameState[size][size];
+        this.board = new GamePlayer[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                this.board[i][j] = GameState.EMPTY;
+                this.board[i][j] = GamePlayer.EMPTY;
             }
         }
     }
@@ -35,19 +38,19 @@ public class GameBoard {
     }
 
     /**
-     * Set the position to the given state
+     * Set the position to the given player
      *
      * @param x X coordinate
      * @param y Y coordinate
-     * @param s State to set
-     * @return
+     * @param p Player to set
+     * @return Game state
      */
-    public GameState put(int x, int y, GameState s) {
-        if (board[x][y] == GameState.EMPTY) {
-            board[x][y] = s;
+    public GameState put(int x, int y, GamePlayer p) {
+        if (board[x][y] == GamePlayer.EMPTY) {
+            board[x][y] = p;
             this.x = x;
             this.y = y;
-            this.player = s;
+            this.player = p;
             moveCount++;
             return GameState.VALID_MOVE;
         } else {
@@ -60,9 +63,9 @@ public class GameBoard {
      *
      * @param x X coordinate
      * @param y Y coordinate
-     * @return State in the given position
+     * @return Player in the given position
      */
-    public GameState get(int x, int y) {
+    public GamePlayer get(int x, int y) {
         if (x < 0 || x >= board.length) {
             throw new IllegalArgumentException(String.format("x must be between 0 and %s", board.length - 1));
         }
@@ -78,66 +81,59 @@ public class GameBoard {
      * @return State of the game
      */
     public GameState getState() {
-        //check end conditions
-        //check col
+        // Column
         for (int i = 0; i < inRow; i++) {
             if (board[x][i] != player) {
                 break;
             }
             if (i == inRow - 1) {
-                //report win for player
                 return GameState.WIN;
             }
         }
-        //check row
+        // Row
         for (int i = 0; i < inRow; i++) {
             if (board[i][y] != player) {
                 break;
             }
             if (i == inRow - 1) {
-                //report win for player
                 return GameState.WIN;
             }
         }
-        //check diag
+        // Diagonal
         if (x == y) {
-            //we're on a diagonal
             for (int i = 0; i < inRow; i++) {
                 if (board[i][i] != player) {
                     break;
                 }
                 if (i == inRow - 1) {
-                    //report win for player
                     return GameState.WIN;
                 }
             }
         }
-        //check anti diag (thanks rampion)
+        // Reverse diagonal
         for (int i = 0; i < inRow; i++) {
             if (board[i][(inRow - 1) - i] != player) {
                 break;
             }
             if (i == inRow - 1) {
-                //report win for player
                 return GameState.WIN;
             }
         }
-        //check draw
+        // Draw
         if (moveCount == (inRow ^ 2) - 1) {
-            //report draw
             return GameState.DRAW;
         }
         return GameState.NEUTRAL;
     }
 
     /**
-     * Format enums as traditional Tic-tac-toe characters
+     * Format enums as traditional Tic-tac-toe symbols
      *
-     * @param state State to convert
-     * @return Character representing player 1, player 2 or empty
+     * @param player Player to convert
+     * @return Symbol representing player 1, player 2 or empty
      */
-    private char stateToChar(GameState state) {
-        switch (state) {
+    private char stateToChar(GamePlayer player) {
+        switch (player) {
             case PLAYER1: {
                 return 'X';
             }
@@ -165,11 +161,11 @@ public class GameBoard {
             separator.append(Strings.repeat("-", fieldWidth));
         }
         final int lastIdx = rowLength - 1;
-        for (int i = 0; i < board.length; i++) {
+        for (GamePlayer[] row : board) {
             out.append(separator);
             out.append("+\n| ");
             for (int j = 0; j < rowLength; j++) {
-                out.append(stateToChar(board[i][j]));
+                out.append(stateToChar(row[j]));
                 if (j != lastIdx) {
                     out.append(" | ");
                 }

@@ -26,9 +26,9 @@ public class GameView extends View {
     private int boardSize;
     private GameBoard controller;
     private int selectedCell = -1;
-    private GameState selectedValue = GameState.EMPTY;
-    private GameState currentPlayer = GameState.UNKNOWN;
-    private GameState winner = GameState.EMPTY;
+    private GamePlayer selectedValue = GamePlayer.EMPTY;
+    private GamePlayer currentPlayer = GamePlayer.UNKNOWN;
+    private GamePlayer winner = GamePlayer.UNKNOWN;
     private int winCol = -1;
     private int winRow = -1;
     private int winDiag = -1;
@@ -59,11 +59,11 @@ public class GameView extends View {
         linePaint.setColor(0xFFFFFFFF);
         linePaint.setStrokeWidth(5);
         linePaint.setStyle(Paint.Style.STROKE);
-        setCurrentPlayer(GameState.PLAYER1);
+        setCurrentPlayer(GamePlayer.PLAYER1);
     }
 
-    public void setCell(int x, int y, GameState value) {
-        controller.put(x, y, value); // XXX: Check return value and determine win/loss
+    public void setCell(int x, int y, GamePlayer player) {
+        controller.put(x, y, player); // XXX: Check getState and determine winner
         invalidate();
     }
 
@@ -78,20 +78,20 @@ public class GameView extends View {
         return -1;
     }
 
-    public GameState getCurrentPlayer() {
+    public GamePlayer getCurrentPlayer() {
         return currentPlayer;
     }
 
-    public void setCurrentPlayer(GameState player) {
+    public void setCurrentPlayer(GamePlayer player) {
         currentPlayer = player;
         selectedCell = -1;
     }
 
-    public GameState getWinner() {
+    public GamePlayer getWinner() {
         return winner;
     }
 
-    public void setWinner(GameState winner) {
+    public void setWinner(GamePlayer winner) {
         this.winner = winner;
     }
 
@@ -134,7 +134,7 @@ public class GameView extends View {
         for (int j = 0, k = 0, y = y7; j < boardSize; j++, y += sxy) {
             for (int i = 0, x = x7; i < boardSize; i++, k++, x += sxy) {
                 dstRect.offsetTo(MARGIN + x, MARGIN + y);
-                GameState v;
+                GamePlayer v;
                 if (selectedCell == k) {
                     v = selectedValue;
                 } else {
@@ -171,16 +171,16 @@ public class GameView extends View {
             Toast.makeText(getContext(), String.valueOf(x + " " + y), Toast.LENGTH_SHORT).show();
             if (isEnabled() && x >= 0 && x < boardSize && y >= 0 & y < boardSize) {
                 int cell = x + boardSize * y;
-                GameState state = cell == selectedCell ? selectedValue : controller.get(x, y);
-                state = state == GameState.EMPTY ? currentPlayer : GameState.EMPTY;
+                GamePlayer state = cell == selectedCell ? selectedValue : controller.get(x, y);
+                state = state == GamePlayer.EMPTY ? currentPlayer : GamePlayer.EMPTY;
                 selectedCell = cell;
                 selectedValue = state;
-                if (controller.get(x, y) == GameState.EMPTY) {
+                if (controller.get(x, y) == GamePlayer.EMPTY) {
                     setCell(x, y, selectedValue);
-                    if (currentPlayer == GameState.PLAYER1) {
-                        currentPlayer = GameState.PLAYER2;
+                    if (currentPlayer == GamePlayer.PLAYER1) {
+                        currentPlayer = GamePlayer.PLAYER2;
                     } else {
-                        currentPlayer = GameState.PLAYER1;
+                        currentPlayer = GamePlayer.PLAYER1;
                     }
                 }
                 if (cellListener != null) {

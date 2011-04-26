@@ -2,6 +2,8 @@ package no.hist.aitel.android.tictactoe;
 
 import org.junit.Test;
 
+import static no.hist.aitel.android.tictactoe.GamePlayer.PLAYER1;
+import static no.hist.aitel.android.tictactoe.GamePlayer.PLAYER2;
 import static no.hist.aitel.android.tictactoe.GameState.*;
 import static org.junit.Assert.assertEquals;
 
@@ -35,7 +37,6 @@ public class GameBoardTest {
         assertEquals(NEUTRAL, b.getState());
         assertEquals(VALID_MOVE, b.put(2, 0, PLAYER1));
         assertEquals(PLAYER1, b.get(2, 0));
-        System.out.println(b.toString());
         assertEquals(WIN, b.getState());
     }
 }
