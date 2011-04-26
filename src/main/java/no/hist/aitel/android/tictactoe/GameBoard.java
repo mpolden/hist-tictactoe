@@ -54,6 +54,10 @@ public class GameBoard {
             throw new IllegalArgumentException(
                     String.format("y must be in range(0,%d)", board[x].length - 1));
         }
+        if (p == player) {
+            throw new IllegalArgumentException(
+                    String.format("Player %s had previous move, can't move again", p));
+        }
         if (board[x][y] == GamePlayer.EMPTY) {
             board[x][y] = p;
             this.x = x;
@@ -142,7 +146,7 @@ public class GameBoard {
      * @param player Player to convert
      * @return Symbol representing player 1, player 2 or empty
      */
-    private char stateToChar(GamePlayer player) {
+    private char playerToSymbol(GamePlayer player) {
         switch (player) {
             case PLAYER1: {
                 return 'X';
@@ -175,7 +179,7 @@ public class GameBoard {
             out.append(separator);
             out.append("+\n| ");
             for (int j = 0; j < rowLength; j++) {
-                out.append(stateToChar(row[j]));
+                out.append(playerToSymbol(row[j]));
                 if (j != lastIdx) {
                     out.append(" | ");
                 }
