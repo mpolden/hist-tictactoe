@@ -1,14 +1,13 @@
 package no.hist.aitel.android.tictactoe;
 
-public enum GameState {
-    WIN(1),
-    DRAW(2),
-    NEUTRAL(3),
-    VALID_MOVE(4),
-    INVALID_MOVE(5);
+public enum GamePlayer {
+    UNKNOWN(-1),
+    EMPTY(0),
+    PLAYER1(1),
+    PLAYER2(2);
     private int value;
 
-    GameState(int value) {
+    GamePlayer(int value) {
         this.value = value;
     }
 
