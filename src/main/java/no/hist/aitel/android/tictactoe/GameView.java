@@ -1,6 +1,7 @@
 package no.hist.aitel.android.tictactoe;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -13,7 +14,6 @@ public class GameView extends View {
 
     public static final long FPS_MS = 1000 / 2;
     private static final int MARGIN = 0;
-    
     private Paint linePaint;
     private Paint bmpPaint;
     private Bitmap bmpPlayer1;
@@ -24,7 +24,7 @@ public class GameView extends View {
     private int offsetX;
     private int offsetY;
     private int boardSize;
-    private GameController controller;
+    private GameBoard controller;
     private int selectedCell = -1;
     private GameState selectedValue = GameState.EMPTY;
     private GameState currentPlayer = GameState.UNKNOWN;
@@ -34,6 +34,7 @@ public class GameView extends View {
     private int winDiag = -1;
     private final Rect srcRect = new Rect();
     private final Rect dstRect = new Rect();
+    private SharedPreferences preferences;
 
     public interface ICellListener {
 
@@ -43,7 +44,6 @@ public class GameView extends View {
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         requestFocus();
-        controller = new GameController();
         drawableBg = getResources().getDrawable(R.drawable.lib_bg);
         setBackgroundDrawable(drawableBg);
         bmpPlayer1 = getResBitmap(R.drawable.cross);
@@ -60,7 +60,7 @@ public class GameView extends View {
     }
 
     public void setCell(int x, int y, GameState value) {
-        controller.move(x, y, value); // XXX: Check return value and determine win/loss
+        controller.put(x, y, value); // XXX: Check return value and determine win/loss
         invalidate();
     }
 
@@ -92,15 +92,8 @@ public class GameView extends View {
         this.winner = winner;
     }
 
-    public void setBoardSize(int boardSize) {
-        this.boardSize = boardSize;
-        GameState[][] board = new GameState[boardSize][boardSize];
-        for (int i = 0; i < boardSize; i++) {
-            for (int j = 0; j < boardSize; j++) {
-                board[i][j] = GameState.EMPTY;
-            }
-        }
-        controller.setBoard(board);
+    public void makeBoard(int boardSize) {
+        this.controller = new GameBoard(boardSize);
     }
 
     @Override
@@ -142,7 +135,7 @@ public class GameView extends View {
                 if (selectedCell == k) {
                     v = selectedValue;
                 } else {
-                    v = controller.getBoard()[i][j];
+                    v = controller.get(i, j);
                 }
                 switch (v) {
                     case PLAYER1:
@@ -175,11 +168,11 @@ public class GameView extends View {
             Toast.makeText(getContext(), String.valueOf(x + " " + y), Toast.LENGTH_SHORT).show();
             if (isEnabled() && x >= 0 && x < boardSize && y >= 0 & y < boardSize) {
                 int cell = x + boardSize * y;
-                GameState state = cell == selectedCell ? selectedValue : controller.getBoard()[x][y];
+                GameState state = cell == selectedCell ? selectedValue : controller.get(x, y);
                 state = state == GameState.EMPTY ? currentPlayer : GameState.EMPTY;
                 selectedCell = cell;
                 selectedValue = state;
-                if (controller.getBoard()[x][y] == GameState.EMPTY) {
+                if (controller.get(x, y) == GameState.EMPTY) {
                     setCell(x, y, selectedValue);
                     if (currentPlayer == GameState.PLAYER1) {
                         currentPlayer = GameState.PLAYER2;
