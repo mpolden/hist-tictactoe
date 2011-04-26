@@ -196,19 +196,15 @@ public class GameBoard {
      */
     @Override
     public String toString() {
-        final StringBuilder out = new StringBuilder();
+        final int length = board.length;
         final int fieldWidth = 3;
-        final int rowLength = board[0].length;
-        final StringBuilder separator = new StringBuilder();
-        for (int i = 0; i < rowLength; i++) {
-            separator.append("+");
-            separator.append(Strings.repeat("-", fieldWidth));
-        }
-        final int lastIdx = rowLength - 1;
-        for (int i = 0; i < board.length; i++) {
+        final String separator = Strings.repeat("+" + Strings.repeat("-", fieldWidth), length);
+        final int lastIdx = length - 1;
+        final StringBuilder out = new StringBuilder();
+        for (int i = 0; i < length; i++) {
             out.append(separator);
             out.append("+\n| ");
-            for (int j = 0; j < rowLength; j++) {
+            for (int j = 0; j < length; j++) {
                 out.append(playerToSymbol(board[j][i]));
                 if (j != lastIdx) {
                     out.append(" | ");
