@@ -2,7 +2,7 @@ package no.hist.aitel.android.tictactoe;
 
 public class GameController {
 
-    private int n;
+    private int inRow;
     private int moveCount;
     private GameState[][] board;
 
@@ -11,8 +11,11 @@ public class GameController {
     }
 
     public void setBoard(GameState[][] board) {
-        this.n = board.length;
         this.board = board;
+    }
+
+    public void setInRow(int inRow) {
+        this.inRow = inRow;
     }
 
     public GameState move(int x, int y, GameState s) {
@@ -22,21 +25,21 @@ public class GameController {
         moveCount++;
         //check end conditions
         //check col
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < inRow; i++) {
             if (board[x][i] != s) {
                 break;
             }
-            if (i == n - 1) {
+            if (i == inRow - 1) {
                 //report win for s
                 return board[x][i];
             }
         }
         //check row
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < inRow; i++) {
             if (board[i][y] != s) {
                 break;
             }
-            if (i == n - 1) {
+            if (i == inRow - 1) {
                 //report win for s
                 return board[i][y];
             }
@@ -44,28 +47,28 @@ public class GameController {
         //check diag
         if (x == y) {
             //we're on a diagonal
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < inRow; i++) {
                 if (board[i][i] != s) {
                     break;
                 }
-                if (i == n - 1) {
+                if (i == inRow - 1) {
                     //report win for s
                     return board[i][i];
                 }
             }
         }
         //check anti diag (thanks rampion)
-        for (int i = 0; i < n; i++) {
-            if (board[i][(n - 1) - i] != s) {
+        for (int i = 0; i < inRow; i++) {
+            if (board[i][(inRow - 1) - i] != s) {
                 break;
             }
-            if (i == n - 1) {
+            if (i == inRow - 1) {
                 //report win for s
-                return board[i][(n - 1) - i];
+                return board[i][(inRow - 1) - i];
             }
         }
         //check draw
-        if (moveCount == (n ^ 2 - 1)) {
+        if (moveCount == (inRow ^ 2 - 1)) {
             //report draw
             return GameState.DRAW;
         }
