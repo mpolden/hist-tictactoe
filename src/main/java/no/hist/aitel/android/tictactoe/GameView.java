@@ -44,9 +44,7 @@ public class GameView extends View {
 
     private static final int MARGIN = 0;
     private static final int MSG_BLINK = 1;
-
-    private final Handler handler = new Handler(new MyHandler());
-
+    
     private Paint linePaint;
     private Paint bmpPaint;
 
@@ -192,7 +190,6 @@ public class GameView extends View {
                     if (blinkDisplayOff) {
                         continue;
                     }
-                    //v = data[k];
                     v = selectedValue;
                 } else {
                     v = data[i][j];
@@ -226,12 +223,10 @@ public class GameView extends View {
             y = (y - MARGIN) / sxy;
             //Toast.makeText(getContext(), String.valueOf(x + boardSize * y), Toast.LENGTH_SHORT).show();
             Toast.makeText(getContext(), String.valueOf(x + " " + y), Toast.LENGTH_SHORT).show();
-            //setCell(x + boardSize * y, State.PLAYER1);
             if (isEnabled() && x >= 0 && x < boardSize && y >= 0 & y < boardSize) {
                 int cell = x + boardSize * y;
                 GameState state = cell == selectedCell ? selectedValue : data[x][y];
                 state = state == GameState.EMPTY ? currentPlayer : GameState.EMPTY;
-                //stopBlink();
                 selectedCell = cell;
                 selectedValue = state;
                 if (data[x][y] == GameState.EMPTY) {
@@ -256,38 +251,6 @@ public class GameView extends View {
             return true;
         }
         return false;
-    }
-
-    public void stopBlink() {
-        boolean hadSelection = selectedCell != -1 && selectedValue != GameState.EMPTY;
-        selectedCell = -1;
-        selectedValue = GameState.EMPTY;
-        if (!blinkRect.isEmpty()) {
-            invalidate(blinkRect);
-        }
-        blinkDisplayOff = false;
-        blinkRect.setEmpty();
-        handler.removeMessages(MSG_BLINK);
-        if (hadSelection && cellListener != null) {
-            cellListener.onCellSelected();
-        }
-    }
-
-    private class MyHandler implements Handler.Callback {
-
-        public boolean handleMessage(Message msg) {
-            if (msg.what == MSG_BLINK) {
-                if (selectedCell >= 0 && selectedValue != GameState.EMPTY && blinkRect.top != 0) {
-                    blinkDisplayOff = !blinkDisplayOff;
-                    invalidate(blinkRect);
-                    if (!handler.hasMessages(MSG_BLINK)) {
-                        handler.sendEmptyMessageDelayed(MSG_BLINK, FPS_MS);
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
     }
 
     private Bitmap getResBitmap(int bmpResId) {
