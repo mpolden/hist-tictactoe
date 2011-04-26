@@ -43,7 +43,6 @@ public class GameView extends View {
     }
 
     private static final int MARGIN = 0;
-    private static final int MSG_BLINK = 1;
     
     private Paint linePaint;
     private Paint bmpPaint;
@@ -69,9 +68,6 @@ public class GameView extends View {
 
     private final Rect srcRect = new Rect();
     private final Rect dstRect = new Rect();
-
-    private boolean blinkDisplayOff;
-    private final Rect blinkRect = new Rect();
 
     public interface ICellListener {
         abstract void onCellSelected();
@@ -187,9 +183,6 @@ public class GameView extends View {
                 dstRect.offsetTo(MARGIN + x, MARGIN + y);
                 GameState v;
                 if (selectedCell == k) {
-                    if (blinkDisplayOff) {
-                        continue;
-                    }
                     v = selectedValue;
                 } else {
                     v = data[i][j];
