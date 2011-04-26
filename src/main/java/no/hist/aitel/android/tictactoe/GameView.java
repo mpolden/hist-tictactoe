@@ -43,6 +43,7 @@ public class GameView extends View {
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         requestFocus();
+        controller = new GameController();
         drawableBg = getResources().getDrawable(R.drawable.lib_bg);
         setBackgroundDrawable(drawableBg);
         bmpPlayer1 = getResBitmap(R.drawable.cross);
