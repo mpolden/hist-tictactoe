@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class GameView extends View {
 
-    public static final long FPS_MS = 1000 / 2;
+    public static final String PREFS_NAME = "Prefs";
     private static final int MARGIN = 0;
     private Paint linePaint;
     private Paint bmpPaint;
@@ -44,6 +44,9 @@ public class GameView extends View {
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         requestFocus();
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+        boardSize = settings.getInt("boardSize", 3);
+        makeBoard(boardSize);
         drawableBg = getResources().getDrawable(R.drawable.lib_bg);
         setBackgroundDrawable(drawableBg);
         bmpPlayer1 = getResBitmap(R.drawable.cross);
