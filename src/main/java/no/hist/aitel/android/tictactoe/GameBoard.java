@@ -32,6 +32,9 @@ public class GameBoard {
             throw new IllegalArgumentException(
                     String.format("Minimum in row is %d", MIN_IN_ROW));
         }
+        if (inRow > size) {
+            throw new IllegalArgumentException("Number of in row can't be larger than board size");
+        }
         this.board = new GamePlayer[size][size];
         this.inRow = inRow;
         for (int i = 0; i < size; i++) {
@@ -100,40 +103,62 @@ public class GameBoard {
      */
     public GameState getState() {
         // Column
-        for (int i = 0; i < inRow; i++) {
-            if (board[x][i] != player) {
+        for (int i = 0, n = 0; i < board.length; i++) {
+            if (board[x][i] == player) {
+                n++;
+            } else if (board[x][i] == GamePlayer.EMPTY) {
+                if (n > 0) {
+                    n--;
+                }
+            } else {
                 break;
             }
-            if (i == inRow - 1) {
+            if (n == inRow) {
                 return GameState.WIN;
             }
         }
         // Row
-        for (int i = 0; i < inRow; i++) {
-            if (board[i][y] != player) {
+        for (int i = 0, n = 0; i < board.length; i++) {
+            if (board[i][y] == player) {
+                n++;
+            } else if (board[i][y] == GamePlayer.EMPTY) {
+                if (n > 0) {
+                    n--;
+                }
+            } else {
                 break;
             }
-            if (i == inRow - 1) {
+            if (n == inRow) {
                 return GameState.WIN;
             }
         }
         // Diagonal
         if (x == y) {
-            for (int i = 0; i < inRow; i++) {
-                if (board[i][i] != player) {
+            for (int i = 0, n = 0; i < board.length; i++) {
+                if (board[i][i] == player) {
+                    n++;
+                } else if (board[i][i] == GamePlayer.EMPTY) {
+                    if (n > 0) {
+                        n--;
+                    }
+                } else {
                     break;
                 }
-                if (i == inRow - 1) {
+                if (n == inRow) {
                     return GameState.WIN;
                 }
             }
         }
         // Reverse diagonal
-        for (int i = 0; i < inRow; i++) {
-            if (board[i][(inRow - 1) - i] != player) {
-                break;
+        for (int i = 0, n = 0; i < board.length; i++) {
+            if (board[i][(board.length - 1) - i] == player) {
+                n++;
+            } else if (board[i][(board.length - 1) - i] == GamePlayer.EMPTY) {
+                if (n > 0) {
+                    n--;
+                }
             }
-            if (i == inRow - 1) {
+            if (n == inRow) {
                 return GameState.WIN;
             }
         }
