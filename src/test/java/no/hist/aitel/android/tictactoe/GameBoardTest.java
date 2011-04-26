@@ -35,6 +35,7 @@ public class GameBoardTest {
         assertEquals(NEUTRAL, b.getState());
         assertEquals(VALID_MOVE, b.put(2, 0, PLAYER1));
         assertEquals(PLAYER1, b.get(2, 0));
+        System.out.println(b.toString());
         assertEquals(WIN, b.getState());
     }
 }

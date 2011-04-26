@@ -34,11 +34,19 @@ public class GameBoard {
         this.inRow = inRow;
     }
 
+    /**
+     * Set the position to the given state
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param s State to set
+     * @return
+     */
     public GameState put(int x, int y, GameState s) {
         if (board[x][y] == GameState.EMPTY) {
             board[x][y] = s;
             this.x = x;
-            this.y = x;
+            this.y = y;
             this.player = s;
             moveCount++;
             return GameState.VALID_MOVE;
