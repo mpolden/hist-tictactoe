@@ -105,6 +105,36 @@ public class GameBoardTest {
     }
 
     @Test
+    public void testGame3x3_Draw() {
+        final GameBoard b = new GameBoard(3, 3);
+        assertEquals(VALID_MOVE, b.put(0, 0, PLAYER1));
+        assertEquals(PLAYER1, b.get(0, 0));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(0, 2, PLAYER2));
+        assertEquals(PLAYER2, b.get(0, 2));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(2, 1, PLAYER1));
+        assertEquals(PLAYER1, b.get(2, 1));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(1, 1, PLAYER2));
+        assertEquals(PLAYER2, b.get(1, 1));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(2, 0, PLAYER1));
+        assertEquals(PLAYER1, b.get(2, 0));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(1, 0, PLAYER2));
+        assertEquals(PLAYER2, b.get(1, 0));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(0, 1, PLAYER1));
+        assertEquals(PLAYER1, b.get(0, 1));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(2, 2, PLAYER2));
+        assertEquals(PLAYER2, b.get(2, 2));
+        assertEquals(DRAW, b.getState());
+        System.out.println(b.toString());
+    }
+
+    @Test
     public void testGame4x4() {
         final GameBoard b = new GameBoard(4, 4);
         assertEquals(VALID_MOVE, b.put(0, 1, PLAYER1));
