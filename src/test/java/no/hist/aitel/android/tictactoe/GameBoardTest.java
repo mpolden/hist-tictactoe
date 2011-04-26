@@ -131,7 +131,6 @@ public class GameBoardTest {
         assertEquals(VALID_MOVE, b.put(2, 2, PLAYER2));
         assertEquals(PLAYER2, b.get(2, 2));
         assertEquals(DRAW, b.getState());
-        System.out.println(b.toString());
     }
 
     @Test
@@ -247,7 +246,7 @@ public class GameBoardTest {
 
     @Test
     public void testGame7x7() {
-        final GameBoard b = new GameBoard(7, 5);
+        final GameBoard b = new GameBoard(7, 6);
         assertEquals(VALID_MOVE, b.put(3, 1, PLAYER2));
         assertEquals(PLAYER2, b.get(3, 1));
         assertEquals(NEUTRAL, b.getState());
@@ -289,6 +288,12 @@ public class GameBoardTest {
         assertEquals(NEUTRAL, b.getState());
         assertEquals(VALID_MOVE, b.put(1, 2, PLAYER1));
         assertEquals(PLAYER1, b.get(1, 2));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(4, 1, PLAYER2));
+        assertEquals(PLAYER2, b.get(4, 1));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(0, 2, PLAYER1));
+        assertEquals(PLAYER1, b.get(0, 2));
         assertEquals(WIN, b.getState());
     }
 }
