@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,51 +12,19 @@ import android.widget.Toast;
 public class GameView extends View {
 
     public static final long FPS_MS = 1000 / 2;
-
-    public enum State {
-        UNKNOWN(-3),
-        WIN(-2),
-        EMPTY(0),
-        PLAYER1(1),
-        PLAYER2(2);
-
-        private int value;
-
-        private State(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public static State fromInt(int i) {
-            for (State s : values()) {
-                if (s.getValue() == i) {
-                    return s;
-                }
-            }
-            return EMPTY;
-        }
-    }
-
     private static final int MARGIN = 0;
     private static final int MSG_BLINK = 1;
-    
     private Paint linePaint;
     private Paint bmpPaint;
-
     private Bitmap bmpPlayer1;
     private Bitmap bmpPlayer2;
     private Drawable drawableBg;
-
     private ICellListener cellListener;
-
     private int sxy;
     private int offsetX;
     private int offsetY;
     private int boardSize;
-    private GameState[][] data;
+    private GameController controller;
     private int selectedCell = -1;
     private GameState selectedValue = GameState.EMPTY;
     private GameState currentPlayer = GameState.UNKNOWN;
@@ -66,33 +32,27 @@ public class GameView extends View {
     private int winCol = -1;
     private int winRow = -1;
     private int winDiag = -1;
-
     private final Rect srcRect = new Rect();
     private final Rect dstRect = new Rect();
-
     private boolean blinkDisplayOff;
     private final Rect blinkRect = new Rect();
 
     public interface ICellListener {
+
         abstract void onCellSelected();
     }
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         requestFocus();
-
         drawableBg = getResources().getDrawable(R.drawable.lib_bg);
         setBackgroundDrawable(drawableBg);
-
         bmpPlayer1 = getResBitmap(R.drawable.cross);
         bmpPlayer2 = getResBitmap(R.drawable.circle);
-
         if (bmpPlayer1 != null) {
             srcRect.set(0, 0, bmpPlayer1.getWidth() - 1, bmpPlayer1.getHeight() - 1);
         }
-
         bmpPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
         linePaint = new Paint();
         linePaint.setColor(0xFFFFFFFF);
         linePaint.setStrokeWidth(5);
@@ -100,12 +60,8 @@ public class GameView extends View {
         setCurrentPlayer(GameState.PLAYER1);
     }
 
-    public GameState[][] getData() {
-        return data;
-    }
-
     public void setCell(int x, int y, GameState value) {
-        data[x][y] = value;
+        controller.move(x, y, value); // XXX: Check return value and determine win/loss
         invalidate();
     }
 
@@ -139,12 +95,13 @@ public class GameView extends View {
 
     public void setBoardSize(int boardSize) {
         this.boardSize = boardSize;
-        data = new GameState[boardSize][boardSize];
+        GameState[][] board = new GameState[boardSize][boardSize];
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
-                data[i][j] = GameState.EMPTY;
+                board[i][j] = GameState.EMPTY;
             }
         }
+        controller.setBoard(board);
     }
 
     @Override
@@ -171,17 +128,14 @@ public class GameView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         int sxy = this.sxy;
         int sn = sxy * boardSize;
         int x7 = offsetX;
         int y7 = offsetY;
-
         for (int i = 0, k = sxy; i < boardSize - 1; i++, k += sxy) {
             canvas.drawLine(x7, y7 + k, x7 + sn - 1, y7 + k, linePaint);
             canvas.drawLine(x7 + k, y7, x7 + k, y7 + sn - 1, linePaint);
         }
-
         for (int j = 0, k = 0, y = y7; j < boardSize; j++, y += sxy) {
             for (int i = 0, x = x7; i < boardSize; i++, k++, x += sxy) {
                 dstRect.offsetTo(MARGIN + x, MARGIN + y);
@@ -192,7 +146,7 @@ public class GameView extends View {
                     }
                     v = selectedValue;
                 } else {
-                    v = data[i][j];
+                    v = controller.getBoard()[i][j];
                 }
                 switch (v) {
                     case PLAYER1:
@@ -225,11 +179,11 @@ public class GameView extends View {
             Toast.makeText(getContext(), String.valueOf(x + " " + y), Toast.LENGTH_SHORT).show();
             if (isEnabled() && x >= 0 && x < boardSize && y >= 0 & y < boardSize) {
                 int cell = x + boardSize * y;
-                GameState state = cell == selectedCell ? selectedValue : data[x][y];
+                GameState state = cell == selectedCell ? selectedValue : controller.getBoard()[x][y];
                 state = state == GameState.EMPTY ? currentPlayer : GameState.EMPTY;
                 selectedCell = cell;
                 selectedValue = state;
-                if (data[x][y] == GameState.EMPTY) {
+                if (controller.getBoard()[x][y] == GameState.EMPTY) {
                     setCell(x, y, selectedValue);
                     if (currentPlayer == GameState.PLAYER1) {
                         currentPlayer = GameState.PLAYER2;
