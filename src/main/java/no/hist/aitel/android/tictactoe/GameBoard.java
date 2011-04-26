@@ -176,16 +176,17 @@ public class GameBoard {
             separator.append(Strings.repeat("-", fieldWidth));
         }
         final int lastIdx = rowLength - 1;
-        for (GamePlayer[] row : board) {
+        for (int i = 0; i < board.length; i++) {
             out.append(separator);
             out.append("+\n| ");
-            for (int j = 0; j < rowLength; j++) {
-                out.append(playerToSymbol(row[j]));
+            for (int j = 0; j < board[i].length; j++) {
+                out.append(playerToSymbol(board[j][i]));
                 if (j != lastIdx) {
                     out.append(" | ");
+                } else {
+                    out.append(" |\n");
                 }
             }
-            out.append(" |\n");
         }
         out.append(separator);
         out.append('+');
