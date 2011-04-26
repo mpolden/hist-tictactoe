@@ -134,7 +134,7 @@ public class GameBoard {
             }
         }
         // Draw
-        if (moveCount == Math.pow(inRow, 2)) {
+        if (moveCount == Math.pow(board.length, 2) - 1) {
             return GameState.DRAW;
         }
         return GameState.NEUTRAL;
