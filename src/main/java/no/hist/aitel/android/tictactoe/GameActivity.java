@@ -27,6 +27,7 @@ public class GameActivity extends Activity {
     private int mode;
     private ServerThread server;
     private ClientThread client;
+    private boolean canMove;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -50,7 +51,7 @@ public class GameActivity extends Activity {
                     x = (x - 0) / sxy;
                     y = (y - 0) / sxy;
                     Toast.makeText(getApplicationContext(), String.valueOf(x + " " + y), Toast.LENGTH_SHORT).show();
-                    if (gameView.isEnabled() && x >= 0 && x < gameView.getBoardSize() && y >= 0 & y < gameView.getBoardSize()) {
+                    if (canMove && x >= 0 && x < gameView.getBoardSize() && y >= 0 & y < gameView.getBoardSize()) {
                         int cell = x + gameView.getBoardSize() * y;
                         GamePlayer state = cell == gameView.getSelectedCell() ? gameView.getSelectedValue() : gameView.getBoard().get(x, y);
                         state = state == GamePlayer.EMPTY ? gameView.getCurrentPlayer() : GamePlayer.EMPTY;
@@ -58,6 +59,7 @@ public class GameActivity extends Activity {
                         gameView.setSelectedValue(state);
                         if (gameView.getBoard().get(x, y) == GamePlayer.EMPTY) {
                             setCell(x, y, state);
+                            canMove = false;
                             if (gameView.getBoard().getState() == GameState.NEUTRAL) {
                                 if (gameView.getCurrentPlayer() == GamePlayer.PLAYER1) {
                                     gameView.setCurrentPlayer(GamePlayer.PLAYER2);
@@ -91,6 +93,14 @@ public class GameActivity extends Activity {
                         String line;
                         try {
                             while ((line = client.getIn().readLine()) != null) {
+                                final int[] xy = parseLine(line);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
+                                        canMove = true;
+                                    }
+                                });
                             }
                         } catch (IOException e) {
                             Log.e(TAG, "IOException", e);
@@ -107,6 +117,14 @@ public class GameActivity extends Activity {
                         String line;
                         try {
                             while ((line = server.getIn().readLine()) != null) {
+                                final int[] xy = parseLine(line);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER2);
+                                        canMove = true;
+                                    }
+                                });
                             }
                         } catch (IOException e) {
                             Log.e(TAG, "IOException", e);
@@ -117,8 +135,23 @@ public class GameActivity extends Activity {
         }
     }
 
+    private int[] parseLine(String line) {
+        final String[] coordinates = line.split(" ");
+        return new int[]{Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1])};
+    }
+
     public void setCell(int x, int y, GamePlayer player) {
         if (gameView.getBoard().put(x, y, player) == GameState.VALID_MOVE) {
+            switch (mode) {
+                case MODE_MULTIPLAYER_HOST: {
+                    server.send(String.format("%d %d", x, y));
+                    break;
+                }
+                case MODE_MULTIPLAYER_JOIN: {
+                    client.send(String.format("%d %d", x, y));
+                    break;
+                }
+            }
             GameState s = gameView.getBoard().getState();
             switch (s) {
                 case WIN: {
