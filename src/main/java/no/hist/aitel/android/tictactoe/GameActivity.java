@@ -33,7 +33,7 @@ public class GameActivity extends Activity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.game);
-        mode = bundle.getInt("mode");
+        mode = getIntent().getExtras().getInt("mode");
         status = (TextView) findViewById(R.id.status);
         gameView = (GameView) findViewById(R.id.game_view);
         gameView.setFocusable(true);
