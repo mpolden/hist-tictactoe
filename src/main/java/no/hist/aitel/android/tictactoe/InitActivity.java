@@ -16,7 +16,7 @@ public class InitActivity extends Activity {
         singleplayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), GameActivity.class);
+                Intent i = new Intent(getApplicationContext(), DifficultyActivity.class);
                 startActivity(i);
             }
         });

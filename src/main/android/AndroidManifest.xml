@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameActivity"/>
+        <activity android:name=".DifficultyActivity"/>
         <activity android:name=".OptionsActivity"/>
         <activity android:name=".MultiplayerModeActivity"/>
         <activity android:name=".NetworkActivity"/>
