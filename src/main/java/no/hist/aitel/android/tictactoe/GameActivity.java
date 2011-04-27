@@ -134,7 +134,6 @@ public class GameActivity extends Activity {
                 gameView.makeBoard(boardSize, inarow);
                 this.server = new ServerThread(getApplicationContext(), handler, findIpAddress());
                 server.start();
-                server.send(String.format("size %d %d", boardSize, inarow));
                 new Thread() {
                     @Override
                     public void run() {
@@ -200,7 +199,11 @@ public class GameActivity extends Activity {
     private final Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            status.setText(msg.getData().getString("msg"));
+            if (msg.arg1 == 1) {
+                server.send(String.format("size %d %d", boardSize, inarow));
+            } else {
+                status.setText(msg.getData().getString("msg"));
+            }
         }
     };
 

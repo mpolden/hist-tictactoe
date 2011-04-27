@@ -28,6 +28,12 @@ public class ServerThread extends Thread {
         this.localIp = localIp;
     }
 
+    private void notifyClientConnected() {
+        final Message msg = handler.obtainMessage();
+        msg.arg1 = 1;
+        handler.sendMessage(msg);
+    }
+
     private void sendMessage(String s) {
         final Message msg = handler.obtainMessage();
         final Bundle bundle = new Bundle();
@@ -59,6 +65,7 @@ public class ServerThread extends Thread {
             Log.e(TAG, "IOException", e);
         }
         if (serverSocket == null) {
+            notifyClientConnected();
             sendMessage(R.string.server_socket_failed);
             Log.e(TAG, "Server socket is null");
             return;
