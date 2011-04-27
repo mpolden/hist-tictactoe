@@ -11,10 +11,14 @@
     <string name="inarow">Required pieces in a row</string>
     <string name="join_game">Join game</string>
     <string name="host_game">Host game</string>
-    <string name="host_game_dialog">You are now hosting a game.\nYour IP address is %s\nOther players must use this
+    <string name="host_game_dialog">You are now hosting a game.\nYour IP address is<b>%s</b>\nOther players must use
+        this
         address to play with you
     </string>
     <string name="join_game_dialog">Please enter the IP address of the player hosting the game.</string>
     <string name="connect">Koble til</string>
     <string name="ok">OK</string>
+    <string name="waiting_for_player">Waiting for player to connect</string>
+    <string name="connected">Connected</string>
+    <string name="connection_failed">Connection failed. Please reconnect.</string>
 </resources>
