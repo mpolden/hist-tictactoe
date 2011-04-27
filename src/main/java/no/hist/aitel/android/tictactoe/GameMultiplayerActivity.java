@@ -1,9 +1,7 @@
 package no.hist.aitel.android.tictactoe;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -29,6 +27,7 @@ public class GameMultiplayerActivity extends Activity {
     private static final int LISTENING_PORT = 8080;
     private String ip;
     private ServerSocket serverSocket;
+    private TextView status;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +43,7 @@ public class GameMultiplayerActivity extends Activity {
             @Override
             public void onClick(View v) {
                 showDialog(HOST_DIALOG_ID);
+                serverThread.start();
             }
         });
         this.ip = findIpAddress();
@@ -86,13 +86,13 @@ public class GameMultiplayerActivity extends Activity {
                 hostDialog.setTitle("Host game");
                 hostDialog.setCancelable(true);
                 TextView tv_hostgame = (TextView) hostDialog.findViewById(R.id.textview_hostgame);
-                tv_hostgame.setText(R.string.host_game_dialog);
-                TextView tv_status = (TextView) hostDialog.findViewById(R.id.textview_hostgame_status);
-                tv_status.setText("Waiting for opponent...");
+                tv_hostgame.setText(getResources().getString(R.string.host_game_dialog, ip));
+                this.status = (TextView) hostDialog.findViewById(R.id.textview_hostgame_status);
                 Button button_cancel = (Button) hostDialog.findViewById(R.id.button_hostgame_cancel);
                 button_cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        stopServer();
                         hostDialog.dismiss();
                     }
                 });
@@ -107,8 +107,7 @@ public class GameMultiplayerActivity extends Activity {
     private final Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            //msg.getData().getString("msg");
-            // update status textview
+            status.setText(msg.getData().getString("msg"));
         }
     };
 
@@ -122,6 +121,17 @@ public class GameMultiplayerActivity extends Activity {
 
     private void sendMessage(int resId) {
         sendMessage(getResources().getString(resId));
+    }
+
+    private void stopServer() {
+        if (serverSocket != null && !serverSocket.isClosed()) {
+            try {
+                serverSocket.close();
+                Log.d(TAG, "Closed server socket");
+            } catch (IOException e) {
+                Log.w(TAG, "Could not close socket", e);
+            }
+        }
     }
 
     private final Thread serverThread = new Thread() {
