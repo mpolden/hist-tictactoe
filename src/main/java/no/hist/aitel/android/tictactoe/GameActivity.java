@@ -21,8 +21,6 @@ public class GameActivity extends Activity {
     private int mode;
     private int boardSize;
     private int inarow;
-    private ServerThread server;
-    private ClientThread client;
     private boolean canMove;
 
     @Override
