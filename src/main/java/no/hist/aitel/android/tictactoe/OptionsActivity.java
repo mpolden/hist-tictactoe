@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-public class SettingsActivity extends Activity {
+public class OptionsActivity extends Activity {
 
     public static final String PREFS_NAME = "Prefs";
     private Spinner boardsizeSpinner;
@@ -21,7 +21,7 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings);
+        setContentView(R.layout.options);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         boardSize = settings.getInt("boardSize", 3);
         boardsizeSpinner = (Spinner) findViewById(R.id.spinner_boardsize);

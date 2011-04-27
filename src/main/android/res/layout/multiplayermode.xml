@@ -6,17 +6,18 @@
     <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="fill_parent"
                   android:orientation="vertical">
-        <Button android:id="@+id/button_join"
-                android:text="@string/join_game"
+        <Button android:id="@+id/button_sharedscreen"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="75dp"/>
-        <Button android:id="@+id/button_host"
+                android:layout_marginTop="75dp"
+                android:background="@drawable/button_sharedscreen"/>
+        <Button android:id="@+id/button_network"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"/>
+                android:layout_marginTop="100dp"
+                android:background="@drawable/button_network"/>
     </LinearLayout>
 
 </LinearLayout>
