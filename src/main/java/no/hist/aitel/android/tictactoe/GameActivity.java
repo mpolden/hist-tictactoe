@@ -1,6 +1,7 @@
 package no.hist.aitel.android.tictactoe;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import java.io.IOException;
 
 public class GameActivity extends Activity {
 
+    private static final String PREFS_NAME = "Prefs";
     public static final int MODE_SINGLEPLAYER = 0;
     public static final int MODE_MULTIPLAYER_SHARED = 1;
     public static final int MODE_MULTIPLAYER_JOIN = 2;
@@ -25,6 +27,8 @@ public class GameActivity extends Activity {
     private GameView gameView;
     private TextView status;
     private int mode;
+    private int boardSize;
+    private int inarow;
     private ServerThread server;
     private ClientThread client;
     private boolean canMove;
@@ -34,6 +38,9 @@ public class GameActivity extends Activity {
         super.onCreate(bundle);
         setContentView(R.layout.game);
         this.mode = getIntent().getExtras().getInt("mode");
+        SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        boardSize = settings.getInt("boardSize", 3);
+        inarow = settings.getInt("inarow", boardSize);
         status = (TextView) findViewById(R.id.status);
         gameView = (GameView) findViewById(R.id.game_view);
         gameView.setFocusable(true);
@@ -78,9 +85,11 @@ public class GameActivity extends Activity {
         });
         switch (mode) {
             case MODE_SINGLEPLAYER: {
+                gameView.makeBoard(boardSize, inarow);
                 break;
             }
             case MODE_MULTIPLAYER_SHARED: {
+                gameView.makeBoard(boardSize, inarow);
                 break;
             }
             case MODE_MULTIPLAYER_JOIN: {
@@ -109,6 +118,7 @@ public class GameActivity extends Activity {
                 };
             }
             case MODE_MULTIPLAYER_HOST: {
+                gameView.makeBoard(boardSize, inarow);
                 this.server = new ServerThread(getApplicationContext(), handler, findIpAddress());
                 server.start();
                 new Thread() {

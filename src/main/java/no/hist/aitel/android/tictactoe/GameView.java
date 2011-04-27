@@ -43,7 +43,7 @@ public class GameView extends View {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
         boardSize = settings.getInt("boardSize", 3);
         inarow = settings.getInt("inarow", boardSize);
-        makeBoard(boardSize, inarow);
+        
         Drawable drawableBg = getResources().getDrawable(R.drawable.lib_bg);
         setBackgroundDrawable(drawableBg);
         bmpPlayer1 = getResBitmap(R.drawable.cross);
