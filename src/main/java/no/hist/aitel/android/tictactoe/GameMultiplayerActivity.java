@@ -107,11 +107,6 @@ public class GameMultiplayerActivity extends Activity {
         }
     }
 
-    @Override
-    protected void onPrepareDialog(int id, Dialog dialog, Bundle args) {
-        super.onPrepareDialog(id, dialog, args);
-    }
-
     private final Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -142,6 +137,7 @@ public class GameMultiplayerActivity extends Activity {
                 Log.e(TAG, "IOException", e);
             }
             if (serverSocket == null) {
+                sendMessage(R.string.server_socket_failed);
                 Log.e(TAG, "Server socket is null");
                 return;
             }
@@ -154,6 +150,7 @@ public class GameMultiplayerActivity extends Activity {
                     Log.e(TAG, "IOException", e);
                 }
                 if (client == null) {
+                    sendMessage(R.string.client_socket_failed);
                     Log.e(TAG, "Client socket is null");
                     return;
                 }
