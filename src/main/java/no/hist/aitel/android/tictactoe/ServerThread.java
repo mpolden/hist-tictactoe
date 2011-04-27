@@ -53,6 +53,7 @@ public class ServerThread extends Thread {
     public void send(String msg) {
         if (out != null) {
             out.println(msg);
+            out.flush();
         }
     }
 

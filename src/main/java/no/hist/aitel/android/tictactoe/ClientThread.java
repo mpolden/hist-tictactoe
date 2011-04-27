@@ -41,6 +41,7 @@ public class ClientThread extends Thread {
     public void send(String message) {
         if (out != null) {
             out.println(message);
+            out.flush();
         }
     }
 
