@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.format.Formatter;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class NetworkActivity extends Activity {
@@ -24,9 +25,7 @@ public class NetworkActivity extends Activity {
         findViewById(R.id.button_join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-                intent.putExtra("mode", GameActivity.MODE_MULTIPLAYER_JOIN);
-                startActivity(intent);
+                showDialog(JOIN_DIALOG_ID);
             }
         });
         findViewById(R.id.button_host).setOnClickListener(new View.OnClickListener() {
@@ -56,9 +55,14 @@ public class NetworkActivity extends Activity {
                 TextView tv_joingame = (TextView) joinDialog.findViewById(R.id.textview_joingame);
                 tv_joingame.setText(R.string.join_game_dialog);
                 Button button_ok = (Button) joinDialog.findViewById(R.id.button_joingame_ok);
+                final EditText remoteIp = (EditText) findViewById(R.id.edittext_ip);
                 button_ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        final Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                        intent.putExtra("mode", GameActivity.MODE_MULTIPLAYER_JOIN);
+                        intent.putExtra("remoteIp", remoteIp.getText().toString());
+                        startActivity(intent);
                         joinDialog.dismiss();
                     }
                 });
