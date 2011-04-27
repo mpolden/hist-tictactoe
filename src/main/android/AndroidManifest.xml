@@ -11,7 +11,7 @@
             android:label="Tic Tac Toe"
             android:debuggable="true">
         <!-- Our activities -->
-        <activity android:name=".GameMultiplayerActivity"
+        <activity android:name=".InitActivity"
                   android:label="Tic Tac Toe"
                   android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
@@ -21,7 +21,7 @@
         </activity>
         <activity android:name=".GameActivity"/>
         <activity android:name=".SettingsActivity"/>
-        <activity android:name=".InitActivity"/>
+        <activity android:name=".GameMultiplayerActivity"/>
     </application>
 
     <uses-sdk android:minSdkVersion="8"/>
