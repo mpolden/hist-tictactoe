@@ -145,8 +145,13 @@ public class GameActivity extends Activity {
 
     @Override
     protected void onStop() {
-        //clientSocket.close
-        //serverSocket.close
+        super.onStop();
+        if (client != null) {
+            client.close();
+        }
+        if (server != null) {
+            server.close();
+        }
     }
 
     private String findIpAddress() {
