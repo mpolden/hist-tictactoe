@@ -24,7 +24,7 @@ public class InitActivity extends Activity {
         multiplayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), MultiplayerActivity.class);
+                Intent i = new Intent(getApplicationContext(), MultiplayerModeActivity.class);
                 startActivity(i);
             }
         });
