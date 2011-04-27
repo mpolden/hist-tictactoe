@@ -102,14 +102,27 @@ public class GameActivity extends Activity {
                         String line;
                         try {
                             while ((line = client.getIn().readLine()) != null) {
-                                final int[] xy = parseLine(line);
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
-                                        canMove = true;
-                                    }
-                                });
+                                if (line.startsWith("size ")) {
+                                    String[] sizes = line.split(" ");
+                                    boardSize = Integer.parseInt(sizes[1]);
+                                    inarow = Integer.parseInt(sizes[2]);
+                                    client.send("size ok");
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            gameView.makeBoard(boardSize, inarow);
+                                        }
+                                    });
+                                } else {
+                                    final int[] xy = parseLine(line);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
+                                            canMove = true;
+                                        }
+                                    });
+                                }
                             }
                         } catch (IOException e) {
                             Log.e(TAG, "IOException", e);
@@ -121,20 +134,25 @@ public class GameActivity extends Activity {
                 gameView.makeBoard(boardSize, inarow);
                 this.server = new ServerThread(getApplicationContext(), handler, findIpAddress());
                 server.start();
+                server.send(String.format("size %d %d", boardSize, inarow));
                 new Thread() {
                     @Override
                     public void run() {
                         String line;
                         try {
                             while ((line = server.getIn().readLine()) != null) {
-                                final int[] xy = parseLine(line);
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER2);
-                                        canMove = true;
-                                    }
-                                });
+                                if ("size ok".equals(line)) {
+                                    canMove = true;
+                                } else {
+                                    final int[] xy = parseLine(line);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER2);
+                                            canMove = true;
+                                        }
+                                    });
+                                }
                             }
                         } catch (IOException e) {
                             Log.e(TAG, "IOException", e);
