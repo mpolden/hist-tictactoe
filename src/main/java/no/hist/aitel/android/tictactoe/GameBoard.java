@@ -44,6 +44,24 @@ public class GameBoard {
     }
 
     /**
+     * Set current player
+     *
+     * @param player Player
+     */
+    public void setPlayer(GamePlayer player) {
+        this.player = player;
+    }
+
+    /**
+     * Get current player
+     *
+     * @return Current player
+     */
+    public GamePlayer getPlayer() {
+        return player;
+    }
+
+    /**
      * Set the position to the given player
      *
      * @param x X coordinate

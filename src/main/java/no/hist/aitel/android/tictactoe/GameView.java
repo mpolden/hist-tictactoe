@@ -1,7 +1,6 @@
 package no.hist.aitel.android.tictactoe;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -10,7 +9,6 @@ import android.view.View;
 
 public class GameView extends View {
 
-    private static final String PREFS_NAME = "Prefs";
     private static final int MARGIN = 0;
     private Paint linePaint;
     private Paint bmpPaint;
@@ -20,30 +18,15 @@ public class GameView extends View {
     private int offsetX;
     private int offsetY;
     private int boardSize;
-    private int inarow;
     private GameBoard board;
     private int selectedCell = -1;
     private GamePlayer selectedValue = GamePlayer.EMPTY;
-    private GamePlayer currentPlayer = GamePlayer.UNKNOWN;
-    private GamePlayer winner = GamePlayer.UNKNOWN;
-    private int winCol = -1;
-    private int winRow = -1;
-    private int winDiag = -1;
     private final Rect srcRect = new Rect();
     private final Rect dstRect = new Rect();
-
-    public interface ICellListener {
-
-        abstract void onCellSelected();
-    }
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         requestFocus();
-        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
-        boardSize = settings.getInt("boardSize", 3);
-        inarow = settings.getInt("inarow", boardSize);
-        
         Drawable drawableBg = getResources().getDrawable(R.drawable.lib_bg);
         setBackgroundDrawable(drawableBg);
         bmpPlayer1 = getResBitmap(R.drawable.cross);
@@ -56,38 +39,10 @@ public class GameView extends View {
         linePaint.setColor(0xFFFFFFFF);
         linePaint.setStrokeWidth(5);
         linePaint.setStyle(Paint.Style.STROKE);
-        setCurrentPlayer(GamePlayer.PLAYER1);
-    }
-
-    public void setCellListener(ICellListener cellListener) {
-        ICellListener cellListener1 = cellListener;
-    }
-
-    public int getSelection() {
-        if (selectedValue == currentPlayer) {
-            return selectedCell;
-        }
-        return -1;
-    }
-
-    public GamePlayer getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    public void setCurrentPlayer(GamePlayer player) {
-        currentPlayer = player;
-        selectedCell = -1;
-    }
-
-    public GamePlayer getWinner() {
-        return winner;
-    }
-
-    public void setWinner(GamePlayer winner) {
-        this.winner = winner;
     }
 
     public void makeBoard(int boardSize, int inarow) {
+        this.boardSize = boardSize;
         this.board = new GameBoard(boardSize, inarow);
     }
 
@@ -118,6 +73,9 @@ public class GameView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        if (board == null) {
+            return;
+        }
         int sx = (w - 2 * MARGIN) / boardSize;
         int sy = (h - 2 * MARGIN) / boardSize;
         int size = sx < sy ? sx : sy;
@@ -142,10 +100,10 @@ public class GameView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(board == null) {
+        super.onDraw(canvas);
+        if (board == null) {
             return;
         }
-        super.onDraw(canvas);
         int sxy = this.sxy;
         int sn = sxy * boardSize;
         int x7 = offsetX;
