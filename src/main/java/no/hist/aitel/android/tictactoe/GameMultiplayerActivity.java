@@ -12,6 +12,8 @@ import android.os.Message;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,7 +37,27 @@ public class GameMultiplayerActivity extends Activity {
         findViewById(R.id.button_join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog(JOIN_DIALOG_ID);
+                final Dialog joinDialog = new Dialog(GameMultiplayerActivity.this);
+                joinDialog.setContentView(R.layout.joingamedialog);
+                joinDialog.setTitle("Join game");
+                joinDialog.setCancelable(true);
+                TextView tv_joingame = (TextView) joinDialog.findViewById(R.id.textview_joingame);
+                tv_joingame.setText(R.string.join_game_dialog);
+                Button button_ok = (Button) joinDialog.findViewById(R.id.button_joingame_ok);
+                button_ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        joinDialog.dismiss();
+                    }
+                });
+                Button button_cancel = (Button) joinDialog.findViewById(R.id.button_joingame_cancel);
+                button_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        joinDialog.dismiss();
+                    }
+                });
+                joinDialog.show();
             }
         });
         findViewById(R.id.button_host).setOnClickListener(new View.OnClickListener() {
