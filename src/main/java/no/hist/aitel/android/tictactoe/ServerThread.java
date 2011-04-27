@@ -65,7 +65,6 @@ public class ServerThread extends Thread {
             Log.e(TAG, "IOException", e);
         }
         if (serverSocket == null) {
-            notifyClientConnected();
             sendMessage(R.string.server_socket_failed);
             Log.e(TAG, "Server socket is null");
             return;
@@ -73,6 +72,7 @@ public class ServerThread extends Thread {
         while (true) {
             try {
                 client = serverSocket.accept();
+                notifyClientConnected();
                 sendMessage(R.string.connected);
             } catch (IOException e) {
                 Log.e(TAG, "IOException", e);
