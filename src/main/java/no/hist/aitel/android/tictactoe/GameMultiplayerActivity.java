@@ -4,14 +4,29 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.format.Formatter;
+import android.util.Log;
 import android.view.View;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class GameMultiplayerActivity extends Activity {
 
+    private static final String TAG = GameMultiplayerActivity.class.getSimpleName();
     private static final int JOIN_DIALOG_ID = 0;
     private static final int HOST_DIALOG_ID = 1;
     private static final int LISTENING_PORT = 8080;
+    private String ip;
+    private ServerSocket serverSocket;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +44,12 @@ public class GameMultiplayerActivity extends Activity {
                 showDialog(HOST_DIALOG_ID);
             }
         });
+        this.ip = findIpAddress();
+    }
+
+    private String findIpAddress() {
+        final WifiInfo wifiInfo = ((WifiManager) getSystemService(WIFI_SERVICE)).getConnectionInfo();
+        return Formatter.formatIpAddress(wifiInfo.getIpAddress());
     }
 
     @Override
@@ -48,7 +69,7 @@ public class GameMultiplayerActivity extends Activity {
             }
             case HOST_DIALOG_ID: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(R.string.host_game_dialog)
+                builder.setMessage(String.format(getResources().getString(R.string.host_game_dialog), ip))
                         .setCancelable(false)
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
@@ -69,9 +90,56 @@ public class GameMultiplayerActivity extends Activity {
         super.onPrepareDialog(id, dialog, args);
     }
 
-    private void hostGame() {
+    private final Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //msg.getData().getString("msg");
+            // update status textview
+        }
+    };
+
+    private void sendMessage(String s) {
+        final Message msg = handler.obtainMessage();
+        final Bundle bundle = new Bundle();
+        bundle.putString("msg", s);
+        msg.setData(bundle);
+        handler.sendMessage(msg);
     }
 
-    private void joinGame() {
+    private void sendMessage(int resId) {
+        sendMessage(getResources().getString(resId));
     }
+
+    private final Thread serverThread = new Thread() {
+        @Override
+        public void run() {
+            try {
+                serverSocket = new ServerSocket(LISTENING_PORT);
+                sendMessage(R.string.waiting_for_player);
+            } catch (IOException e) {
+                Log.e(TAG, "IOException", e);
+            }
+            while (true) {
+                Socket client = null;
+                try {
+                    client = serverSocket.accept();
+                    sendMessage(R.string.connected);
+                } catch (IOException e) {
+                    Log.e(TAG, "IOException", e);
+                }
+                try {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        Log.d(TAG, String.format("Received: %s", line));
+                        // do something here
+                    }
+                    break;
+                } catch (IOException e) {
+                    sendMessage(R.string.connection_failed);
+                    Log.w(TAG, "IOException", e);
+                }
+            }
+        }
+    };
 }
