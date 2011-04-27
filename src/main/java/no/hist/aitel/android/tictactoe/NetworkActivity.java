@@ -20,7 +20,7 @@ public class NetworkActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.multiplayer);
+        setContentView(R.layout.network);
         findViewById(R.id.button_join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

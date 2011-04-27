@@ -7,16 +7,17 @@
                   android:layout_height="fill_parent"
                   android:orientation="vertical">
         <Button android:id="@+id/button_join"
-                android:text="@string/join_game"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="75dp"/>
+                android:layout_marginTop="75dp"
+                android:background="@drawable/button_joingame"/>
         <Button android:id="@+id/button_host"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"/>
+                android:layout_marginTop="100dp"
+                android:background="@drawable/button_hostgame"/>
     </LinearLayout>
 
 </LinearLayout>
