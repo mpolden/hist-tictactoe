@@ -21,4 +21,6 @@
     <string name="waiting_for_player">Waiting for player to connect</string>
     <string name="connected">Connected</string>
     <string name="connection_failed">Connection failed. Please reconnect.</string>
+    <string name="server_socket_failed">Could not start server.</string>
+    <string name="client_socket_failed">Client connection failed.</string>
 </resources>
