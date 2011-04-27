@@ -111,6 +111,7 @@ public class GameActivity extends Activity {
                                         @Override
                                         public void run() {
                                             gameView.makeBoard(boardSize, inarow);
+                                            gameView.invalidate();
                                         }
                                     });
                                 } else {
