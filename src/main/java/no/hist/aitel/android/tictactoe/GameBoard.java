@@ -106,9 +106,7 @@ public class GameBoard {
             if (board[x][i] == player) {
                 n++;
             } else if (board[x][i] == GamePlayer.EMPTY) {
-                if (n > 0) {
-                    n--;
-                }
+                n = 0;
             } else {
                 break;
             }
@@ -121,9 +119,7 @@ public class GameBoard {
             if (board[i][y] == player) {
                 n++;
             } else if (board[i][y] == GamePlayer.EMPTY) {
-                if (n > 0) {
-                    n--;
-                }
+                n = 0;
             } else {
                 break;
             }
@@ -137,9 +133,7 @@ public class GameBoard {
                 if (board[i][i] == player) {
                     n++;
                 } else if (board[i][i] == GamePlayer.EMPTY) {
-                    if (n > 0) {
-                        n--;
-                    }
+                    n = 0;
                 } else {
                     break;
                 }
@@ -153,9 +147,7 @@ public class GameBoard {
             if (board[i][(board.length - 1) - i] == player) {
                 n++;
             } else if (board[i][(board.length - 1) - i] == GamePlayer.EMPTY) {
-                if (n > 0) {
-                    n--;
-                }
+                n = 0;
             }
             if (n == inRow) {
                 return GameState.WIN;
