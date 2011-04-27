@@ -5,6 +5,8 @@
           android:versionName="0.1"
           android:installLocation="auto">
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
     <application
             android:label="Tic Tac Toe"
             android:debuggable="true">
