@@ -1,20 +1,19 @@
 package no.hist.aitel.android.tictactoe;
 
 import android.app.Activity;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 public class GameActivity extends Activity {
 
@@ -23,17 +22,17 @@ public class GameActivity extends Activity {
     public static final int MODE_MULTIPLAYER_JOIN = 2;
     public static final int MODE_MULTIPLAYER_HOST = 3;
     private static final String TAG = GameActivity.class.getSimpleName();
-    private static final int LISTENING_PORT = 8080;
     private GameView gameView;
     private TextView status;
-    private ServerSocket serverSocket;
     private int mode;
+    private ServerThread server;
+    private ClientThread client;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.game);
-        mode = getIntent().getExtras().getInt("mode");
+        this.mode = getIntent().getExtras().getInt("mode");
         status = (TextView) findViewById(R.id.status);
         gameView = (GameView) findViewById(R.id.game_view);
         gameView.setFocusable(true);
@@ -83,10 +82,37 @@ public class GameActivity extends Activity {
                 break;
             }
             case MODE_MULTIPLAYER_JOIN: {
-                break;
+                String remoteIp = getIntent().getExtras().getString("remoteIp");
+                this.client = new ClientThread(getApplicationContext(), handler, remoteIp);
+                client.start();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        String line;
+                        try {
+                            while ((line = client.getIn().readLine()) != null) {
+                            }
+                        } catch (IOException e) {
+                            Log.e(TAG, "IOException", e);
+                        }
+                    }
+                };
             }
             case MODE_MULTIPLAYER_HOST: {
-                break;
+                this.server = new ServerThread(getApplicationContext(), handler, findIpAddress());
+                server.start();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        String line;
+                        try {
+                            while ((line = server.getIn().readLine()) != null) {
+                            }
+                        } catch (IOException e) {
+                            Log.e(TAG, "IOException", e);
+                        }
+                    }
+                };
             }
         }
     }
@@ -117,70 +143,15 @@ public class GameActivity extends Activity {
         }
     };
 
-    private void sendMessage(String s) {
-        final Message msg = handler.obtainMessage();
-        final Bundle bundle = new Bundle();
-        bundle.putString("msg", s);
-        msg.setData(bundle);
-        handler.sendMessage(msg);
+    @Override
+    protected void onStop() {
+        //clientSocket.close
+        //serverSocket.close
     }
 
-    private void sendMessage(int resId) {
-        sendMessage(getResources().getString(resId));
+    private String findIpAddress() {
+        final WifiInfo wifiInfo = ((WifiManager) getSystemService(WIFI_SERVICE)).getConnectionInfo();
+        return Formatter.formatIpAddress(wifiInfo.getIpAddress());
     }
-
-    private void stopServer() {
-        if (serverSocket != null && !serverSocket.isClosed()) {
-            try {
-                serverSocket.close();
-                Log.d(TAG, "Closed server socket");
-            } catch (IOException e) {
-                Log.w(TAG, "Could not close socket", e);
-            }
-        }
-    }
-
-    private final Thread serverThread = new Thread() {
-        @Override
-        public void run() {
-            try {
-                serverSocket = new ServerSocket(LISTENING_PORT);
-                sendMessage(R.string.waiting_for_player);
-            } catch (IOException e) {
-                Log.e(TAG, "IOException", e);
-            }
-            if (serverSocket == null) {
-                sendMessage(R.string.server_socket_failed);
-                Log.e(TAG, "Server socket is null");
-                return;
-            }
-            while (true) {
-                Socket client = null;
-                try {
-                    client = serverSocket.accept();
-                    sendMessage(R.string.connected);
-                } catch (IOException e) {
-                    Log.e(TAG, "IOException", e);
-                }
-                if (client == null) {
-                    sendMessage(R.string.client_socket_failed);
-                    Log.e(TAG, "Client socket is null");
-                    return;
-                }
-                try {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                    String line;
-                    while ((line = in.readLine()) != null) {
-                        Log.d(TAG, String.format("Received: %s", line));
-                        // do something here
-                    }
-                    break;
-                } catch (IOException e) {
-                    sendMessage(R.string.connection_failed);
-                    Log.w(TAG, "IOException", e);
-                }
-            }
-        }
-    };
 }
 
