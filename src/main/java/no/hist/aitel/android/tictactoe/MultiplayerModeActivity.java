@@ -16,16 +16,17 @@ public class MultiplayerModeActivity extends Activity {
         sharedscreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), GameActivity.class);
-                startActivity(i);
+                final Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                intent.putExtra("mode", GameActivity.MODE_MULTIPLAYER_SHARED);
+                startActivity(intent);
             }
         });
         Button network = (Button) findViewById(R.id.button_network);
         network.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), NetworkActivity.class);
-                startActivity(i);
+                final Intent intent = new Intent(getApplicationContext(), NetworkActivity.class);
+                startActivity(intent);
             }
         });
     }
