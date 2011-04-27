@@ -8,4 +8,5 @@
         <item>6x6</item>
         <item>7x7</item>
     </string-array>
+    <string name="inarow">Antall brikker på rad</string>
 </resources>
