@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class SettingsActivity extends Activity {
 
@@ -31,7 +30,6 @@ public class SettingsActivity extends Activity {
         boardsizeSpinner.setAdapter(boardSizeAdapter);
         boardsizeSpinner.setOnItemSelectedListener(new BoardSizeSelectionListener());
         boardsizeSpinner.setSelection(boardSize - 3);
-
         inarow = settings.getInt("inarow", boardSize);
         inarowSpinner = (Spinner) findViewById(R.id.spinner_inarow);
         inarowAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item);
@@ -47,6 +45,7 @@ public class SettingsActivity extends Activity {
             boardSize = pos + 3;
             updateInarowAdapter();
         }
+
         public void onNothingSelected(AdapterView parent) {
         }
     }
@@ -56,17 +55,17 @@ public class SettingsActivity extends Activity {
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             inarow = (Integer) parent.getItemAtPosition(pos);
         }
+
         public void onNothingSelected(AdapterView parent) {
         }
     }
 
     private void updateInarowAdapter() {
         inarowAdapter.clear();
-        for(int i=3; i<= boardSize; i++) {
+        for (int i = 3; i <= boardSize; i++) {
             inarowAdapter.add(new Integer(i));
         }
     }
-
 
     protected void onStop() {
         super.onStop();

@@ -24,7 +24,6 @@ public class GameActivity extends Activity {
         gameView.setFocusableInTouchMode(true);
         gameView.setCellListener(new MyCellListener());
         gameView.setOnTouchListener(new View.OnTouchListener() {
-
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
