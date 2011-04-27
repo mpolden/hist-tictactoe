@@ -9,7 +9,6 @@ public class GameBoard {
 
     private static final int MIN_BOARD_SIZE = 3;
     private static final int MIN_IN_ROW = 3;
-
     private int inRow;
     private int moveCount;
     private int x;
@@ -199,14 +198,14 @@ public class GameBoard {
         final int length = board.length;
         final int fieldWidth = 3;
         final String separator = Strings.repeat("+" + Strings.repeat("-", fieldWidth), length);
-        final int lastIdx = length - 1;
         final StringBuilder out = new StringBuilder();
         for (int i = 0; i < length; i++) {
             out.append(separator);
             out.append("+\n| ");
             for (int j = 0; j < length; j++) {
+                final int last = length - 1;
                 out.append(playerToSymbol(board[j][i]));
-                if (j != lastIdx) {
+                if (j != last) {
                     out.append(" | ");
                 } else {
                     out.append(" |\n");
