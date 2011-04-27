@@ -6,7 +6,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -18,7 +21,7 @@ public class ServerThread extends Thread {
     private Context context;
     private String localIp;
     private ServerSocket serverSocket;
-    private Socket client;
+    private Socket clientSocket;
     private BufferedReader in;
     private PrintWriter out;
 
@@ -72,20 +75,20 @@ public class ServerThread extends Thread {
         }
         while (true) {
             try {
-                client = serverSocket.accept();
+                clientSocket = serverSocket.accept();
                 notifyClientConnected();
                 sendMessage(R.string.connected);
             } catch (IOException e) {
                 Log.e(TAG, "IOException", e);
             }
-            if (client == null) {
+            if (clientSocket == null) {
                 sendMessage(R.string.client_socket_failed);
                 Log.e(TAG, "Client socket is null");
                 return;
             }
             try {
-                this.out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())));
-                this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                this.out = new PrintWriter(clientSocket.getOutputStream(), true);
+                this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             } catch (IOException e) {
                 sendMessage(R.string.connection_failed);
                 Log.w(TAG, "IOException", e);
@@ -94,11 +97,11 @@ public class ServerThread extends Thread {
     }
 
     public void close() {
-        if (client != null && !client.isClosed()) {
+        if (clientSocket != null && !clientSocket.isClosed()) {
             try {
-                client.close();
+                clientSocket.close();
             } catch (IOException e) {
-                Log.w(TAG, "Could not close client socket", e);
+                Log.w(TAG, "Could not close clientSocket socket", e);
             }
         }
         if (serverSocket != null && !serverSocket.isClosed()) {

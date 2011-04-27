@@ -6,7 +6,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientThread extends Thread {
@@ -18,7 +21,7 @@ public class ClientThread extends Thread {
     private Context context;
     private BufferedReader in;
     private PrintWriter out;
-    private Socket client;
+    private Socket socket;
 
     public ClientThread(Context context, Handler handler, String remoteIp) {
         this.remoteIp = remoteIp;
@@ -52,28 +55,28 @@ public class ClientThread extends Thread {
     @Override
     public void run() {
         try {
-            client = new Socket(remoteIp, LISTENING_PORT);
+            socket = new Socket(remoteIp, LISTENING_PORT);
         } catch (IOException e) {
             Log.e(TAG, "IOException", e);
         }
-        if (client == null) {
+        if (socket == null) {
             sendMessage(R.string.could_not_connect);
             return;
         }
         try {
-            this.out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())));
-            this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            this.out = new PrintWriter(socket.getOutputStream(), true);
+            this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             Log.e(TAG, "IOException", e);
         }
     }
 
     public void close() {
-        if (client != null && !client.isClosed()) {
+        if (socket != null && !socket.isClosed()) {
             try {
-                client.close();
+                socket.close();
             } catch (IOException e) {
-                Log.w(TAG, "Could not close client socket", e);
+                Log.w(TAG, "Could not close socket socket", e);
             }
         }
     }
