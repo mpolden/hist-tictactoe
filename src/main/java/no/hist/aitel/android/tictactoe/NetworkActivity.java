@@ -55,7 +55,7 @@ public class NetworkActivity extends Activity {
                 TextView tv_joingame = (TextView) joinDialog.findViewById(R.id.textview_joingame);
                 tv_joingame.setText(R.string.join_game_dialog);
                 Button button_ok = (Button) joinDialog.findViewById(R.id.button_joingame_ok);
-                final EditText remoteIp = (EditText) findViewById(R.id.edittext_ip);
+                final EditText remoteIp = (EditText) joinDialog.findViewById(R.id.edittext_ip);
                 button_ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
