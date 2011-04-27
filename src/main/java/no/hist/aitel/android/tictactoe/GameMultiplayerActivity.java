@@ -141,6 +141,10 @@ public class GameMultiplayerActivity extends Activity {
             } catch (IOException e) {
                 Log.e(TAG, "IOException", e);
             }
+            if (serverSocket == null) {
+                Log.e(TAG, "Server socket is null");
+                return;
+            }
             while (true) {
                 Socket client = null;
                 try {
@@ -148,6 +152,10 @@ public class GameMultiplayerActivity extends Activity {
                     sendMessage(R.string.connected);
                 } catch (IOException e) {
                     Log.e(TAG, "IOException", e);
+                }
+                if (client == null) {
+                    Log.e(TAG, "Client socket is null");
+                    return;
                 }
                 try {
                     BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
