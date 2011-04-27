@@ -6,13 +6,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerThread implements Runnable {
+public class ServerThread extends Thread {
 
     private static final String TAG = ServerThread.class.getSimpleName();
     private static final int LISTENING_PORT = 8080;
@@ -20,6 +18,8 @@ public class ServerThread implements Runnable {
     private Context context;
     private String localIp;
     private ServerSocket serverSocket;
+    private BufferedReader in;
+    private PrintWriter out;
 
     public ServerThread(Context context, Handler handler, String localIp) {
         this.context = context;
@@ -37,6 +37,16 @@ public class ServerThread implements Runnable {
 
     private void sendMessage(int resId) {
         sendMessage(context.getResources().getString(resId));
+    }
+
+    public BufferedReader getIn() {
+        return in;
+    }
+
+    public void send(String msg) {
+        if (out != null) {
+            out.println(msg);
+        }
     }
 
     @Override
@@ -66,13 +76,8 @@ public class ServerThread implements Runnable {
                 return;
             }
             try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                String line;
-                while ((line = in.readLine()) != null) {
-                    Log.d(TAG, String.format("Received: %s", line));
-                    //runOnUiThread(doit);
-                }
-                break;
+                this.out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())));
+                this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));
             } catch (IOException e) {
                 sendMessage(R.string.connection_failed);
                 Log.w(TAG, "IOException", e);

@@ -6,23 +6,21 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
-public class ClientThread implements Runnable {
+public class ClientThread extends Thread {
 
     private static final String TAG = ClientThread.class.getSimpleName();
+    private static final int LISTENING_PORT = 8080;
     private String remoteIp;
-    private int remotePort;
     private Handler handler;
     private Context context;
+    private BufferedReader in;
+    private PrintWriter out;
 
-    public ClientThread(String remoteIp, int remotePort, Handler handler, Context context) {
+    public ClientThread(Context context, Handler handler, String remoteIp) {
         this.remoteIp = remoteIp;
-        this.remotePort = remotePort;
         this.handler = handler;
         this.context = context;
     }
@@ -39,11 +37,21 @@ public class ClientThread implements Runnable {
         sendMessage(context.getResources().getString(resId));
     }
 
+    public void send(String message) {
+        if (out != null) {
+            out.println(message);
+        }
+    }
+
+    public BufferedReader getIn() {
+        return in;
+    }
+
     @Override
     public void run() {
         Socket s = null;
         try {
-            s = new Socket(remoteIp, remotePort);
+            s = new Socket(remoteIp, LISTENING_PORT);
         } catch (IOException e) {
             Log.e(TAG, "IOException", e);
         }
@@ -52,8 +60,8 @@ public class ClientThread implements Runnable {
             return;
         }
         try {
-            PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream())));
-            out.println("X Y");
+            this.out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream())));
+            this.in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         } catch (IOException e) {
             Log.e(TAG, "IOException", e);
         }
