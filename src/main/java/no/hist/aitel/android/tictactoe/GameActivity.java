@@ -66,7 +66,6 @@ public class GameActivity extends Activity {
                         gameView.setSelectedValue(state);
                         if (gameView.getBoard().get(x, y) == GamePlayer.EMPTY) {
                             setCell(x, y, state);
-                            canMove = false;
                             if (gameView.getBoard().getState() == GameState.NEUTRAL) {
                                 if (gameView.getCurrentPlayer() == GamePlayer.PLAYER1) {
                                     gameView.setCurrentPlayer(GamePlayer.PLAYER2);
@@ -90,6 +89,7 @@ public class GameActivity extends Activity {
             }
             case MODE_MULTIPLAYER_SHARED: {
                 gameView.makeBoard(boardSize, inarow);
+                canMove = true;
                 break;
             }
             case MODE_MULTIPLAYER_JOIN: {
