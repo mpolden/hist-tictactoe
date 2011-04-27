@@ -18,6 +18,7 @@ public class ClientThread extends Thread {
     private Context context;
     private BufferedReader in;
     private PrintWriter out;
+    private Socket client;
 
     public ClientThread(Context context, Handler handler, String remoteIp) {
         this.remoteIp = remoteIp;
@@ -49,21 +50,30 @@ public class ClientThread extends Thread {
 
     @Override
     public void run() {
-        Socket s = null;
         try {
-            s = new Socket(remoteIp, LISTENING_PORT);
+            client = new Socket(remoteIp, LISTENING_PORT);
         } catch (IOException e) {
             Log.e(TAG, "IOException", e);
         }
-        if (s == null) {
+        if (client == null) {
             sendMessage(R.string.could_not_connect);
             return;
         }
         try {
-            this.out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream())));
-            this.in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            this.out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())));
+            this.in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         } catch (IOException e) {
             Log.e(TAG, "IOException", e);
+        }
+    }
+
+    public void close() {
+        if (client != null && !client.isClosed()) {
+            try {
+                client.close();
+            } catch (IOException e) {
+                Log.w(TAG, "Could not close client socket", e);
+            }
         }
     }
 }

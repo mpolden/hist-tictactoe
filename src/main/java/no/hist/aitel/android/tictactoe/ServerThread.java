@@ -18,6 +18,7 @@ public class ServerThread extends Thread {
     private Context context;
     private String localIp;
     private ServerSocket serverSocket;
+    private Socket client;
     private BufferedReader in;
     private PrintWriter out;
 
@@ -63,7 +64,6 @@ public class ServerThread extends Thread {
             return;
         }
         while (true) {
-            Socket client = null;
             try {
                 client = serverSocket.accept();
                 sendMessage(R.string.connected);
@@ -81,6 +81,23 @@ public class ServerThread extends Thread {
             } catch (IOException e) {
                 sendMessage(R.string.connection_failed);
                 Log.w(TAG, "IOException", e);
+            }
+        }
+    }
+
+    public void close() {
+        if (client != null && !client.isClosed()) {
+            try {
+                client.close();
+            } catch (IOException e) {
+                Log.w(TAG, "Could not close client socket", e);
+            }
+        }
+        if (serverSocket != null && !serverSocket.isClosed()) {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                Log.w(TAG, "Could not close server socket", e);
             }
         }
     }
