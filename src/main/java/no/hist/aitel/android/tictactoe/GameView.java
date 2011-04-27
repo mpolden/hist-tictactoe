@@ -20,7 +20,8 @@ public class GameView extends View {
     private int offsetX;
     private int offsetY;
     private int boardSize;
-    private GameBoard controller;
+    private int inarow;
+    private GameBoard board;
     private int selectedCell = -1;
     private GamePlayer selectedValue = GamePlayer.EMPTY;
     private GamePlayer currentPlayer = GamePlayer.UNKNOWN;
@@ -30,7 +31,6 @@ public class GameView extends View {
     private int winDiag = -1;
     private final Rect srcRect = new Rect();
     private final Rect dstRect = new Rect();
-    private SharedPreferences preferences;
 
     public interface ICellListener {
 
@@ -42,7 +42,8 @@ public class GameView extends View {
         requestFocus();
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
         boardSize = settings.getInt("boardSize", 3);
-        makeBoard(boardSize);
+        inarow = settings.getInt("inarow", boardSize);
+        makeBoard(boardSize, inarow);
         Drawable drawableBg = getResources().getDrawable(R.drawable.lib_bg);
         setBackgroundDrawable(drawableBg);
         bmpPlayer1 = getResBitmap(R.drawable.cross);
@@ -86,12 +87,12 @@ public class GameView extends View {
         this.winner = winner;
     }
 
-    public void makeBoard(int boardSize) {
-        this.controller = new GameBoard(boardSize, boardSize);
+    public void makeBoard(int boardSize, int inarow) {
+        this.board = new GameBoard(boardSize, inarow);
     }
 
-    public GameBoard getController() {
-        return controller;
+    public GameBoard getBoard() {
+        return board;
     }
 
     public int getBoardSize() {
@@ -157,7 +158,7 @@ public class GameView extends View {
                 if (selectedCell == k) {
                     v = selectedValue;
                 } else {
-                    v = controller.get(i, j);
+                    v = board.get(i, j);
                 }
                 switch (v) {
                     case PLAYER1:
@@ -175,43 +176,6 @@ public class GameView extends View {
         }
     }
 
-    /*
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int action = event.getAction();
-        if (action == MotionEvent.ACTION_DOWN) {
-            return true;
-        } else if (action == MotionEvent.ACTION_UP) {
-            int x = (int) event.getX();
-            int y = (int) event.getY();
-            int sxy = this.sxy;
-            x = (x - MARGIN) / sxy;
-            y = (y - MARGIN) / sxy;
-            //Toast.makeText(getContext(), String.valueOf(x + boardSize * y), Toast.LENGTH_SHORT).show();
-            Toast.makeText(getContext(), String.valueOf(x + " " + y), Toast.LENGTH_SHORT).show();
-            if (isEnabled() && x >= 0 && x < boardSize && y >= 0 & y < boardSize) {
-                int cell = x + boardSize * y;
-                GamePlayer state = cell == selectedCell ? selectedValue : controller.get(x, y);
-                state = state == GamePlayer.EMPTY ? currentPlayer : GamePlayer.EMPTY;
-                selectedCell = cell;
-                selectedValue = state;
-                if (controller.get(x, y) == GamePlayer.EMPTY) {
-                    setCell(x, y, selectedValue);
-                    if (currentPlayer == GamePlayer.PLAYER1) {
-                        currentPlayer = GamePlayer.PLAYER2;
-                    } else {
-                        currentPlayer = GamePlayer.PLAYER1;
-                    }
-                }
-                if (cellListener != null) {
-                    cellListener.onCellSelected();
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-    */
     private Bitmap getResBitmap(int bmpResId) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inDither = false;

@@ -9,11 +9,25 @@
                   android:orientation="horizontal">
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:text="@string/boardsize"/>
+                  android:text="@string/boardsize"
+                  android:layout_weight="1"/>
         <Spinner android:id="@+id/spinner_boardsize"
                  android:layout_width="fill_parent"
                  android:layout_height="wrap_content"
-                 android:prompt="@string/boardsize"/>
+                 android:prompt="@string/boardsize"
+                 android:layout_weight="1"/>
     </LinearLayout>
-
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/inarow"
+                  android:layout_weight="1"/>
+        <Spinner android:id="@+id/spinner_inarow"
+                 android:layout_width="fill_parent"
+                 android:layout_height="wrap_content"
+                 android:prompt="@string/inarow"
+                 android:layout_weight="1"/>
+    </LinearLayout>
 </LinearLayout>
