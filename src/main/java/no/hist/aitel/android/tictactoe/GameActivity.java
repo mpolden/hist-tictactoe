@@ -129,6 +129,7 @@ public class GameActivity extends Activity {
                         }
                     }
                 };
+                break;
             }
             case MODE_MULTIPLAYER_HOST: {
                 gameView.makeBoard(boardSize, inarow);
@@ -158,6 +159,7 @@ public class GameActivity extends Activity {
                         }
                     }
                 };
+                break;
             }
         }
     }
