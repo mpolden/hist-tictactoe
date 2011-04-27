@@ -75,6 +75,20 @@ public class GameActivity extends Activity {
                 return false;
             }
         });
+        switch (mode) {
+            case MODE_SINGLEPLAYER: {
+                break;
+            }
+            case MODE_MULTIPLAYER_SHARED: {
+                break;
+            }
+            case MODE_MULTIPLAYER_JOIN: {
+                break;
+            }
+            case MODE_MULTIPLAYER_HOST: {
+                break;
+            }
+        }
     }
 
     public void setCell(int x, int y, GamePlayer player) {
