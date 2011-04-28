@@ -51,17 +51,17 @@ public class GameActivity extends Activity {
                     if (canMove && x >= 0 && x < gameView.getBoardSize() && y >= 0 & y < gameView.getBoardSize()) {
                         int cell = x + gameView.getBoardSize() * y;
                         GamePlayer state = cell == gameView.getSelectedCell() ? gameView.getSelectedValue() : gameView.getBoard().get(x, y);
-                        state = state == GamePlayer.EMPTY ? gameView.getBoard().getPlayer() : GamePlayer.EMPTY;
+                        state = state == GamePlayer.EMPTY ? gameView.getBoard().getCurrentPlayer() : GamePlayer.EMPTY;
                         gameView.setSelectedCell(cell);
                         gameView.setSelectedValue(state);
                         if (gameView.getBoard().get(x, y) == GamePlayer.EMPTY) {
                             setCell(x, y, state);
                             if (gameView.getBoard().getState() == GameState.NEUTRAL) {
-                                if (gameView.getBoard().getPlayer() == GamePlayer.PLAYER1) {
-                                    gameView.getBoard().setPlayer(GamePlayer.PLAYER2);
+                                if (gameView.getBoard().getCurrentPlayer() == GamePlayer.PLAYER1) {
+                                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
                                     status.setText("Player 2's turn");
                                 } else {
-                                    gameView.getBoard().setPlayer(GamePlayer.PLAYER1);
+                                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                                     status.setText("Player 1's turn");
                                 }
                             }
@@ -91,12 +91,13 @@ public class GameActivity extends Activity {
             switch (s) {
                 case WIN: {
                     gameView.setEnabled(false);
-                    status.setText(player.toString() + " WINS!");
+                    status.setText(String.format(getResources().getString(R.string.win),
+                            player.toString()));
                     break;
                 }
                 case DRAW: {
                     gameView.setEnabled(false);
-                    status.setText("DRAW");
+                    status.setText(R.string.draw);
                     break;
                 }
             }

@@ -14,7 +14,8 @@ public class GameBoard {
     private int x;
     private int y;
     private GamePlayer[][] board;
-    private GamePlayer player;
+    private GamePlayer previousPlayer;
+    private GamePlayer currentPlayer;
 
     /**
      * Create an empty board of the given size
@@ -43,26 +44,16 @@ public class GameBoard {
         }
     }
 
-    /**
-     * Set current player
-     *
-     * @param player Player
-     */
-    public void setPlayer(GamePlayer player) {
-        this.player = player;
+    public GamePlayer getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(GamePlayer currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     /**
-     * Get current player
-     *
-     * @return Current player
-     */
-    public GamePlayer getPlayer() {
-        return player;
-    }
-
-    /**
-     * Set the position to the given player
+     * Set the position to the given previousPlayer
      *
      * @param x X coordinate
      * @param y Y coordinate
@@ -78,7 +69,7 @@ public class GameBoard {
             throw new IllegalArgumentException(
                     String.format("y must be in range(0,%d)", board[x].length - 1));
         }
-        if (p == player) {
+        if (p == previousPlayer) {
             throw new IllegalArgumentException(
                     String.format("Player %s had previous move, can't move again", p));
         }
@@ -86,7 +77,7 @@ public class GameBoard {
             board[x][y] = p;
             this.x = x;
             this.y = y;
-            this.player = p;
+            this.previousPlayer = p;
             moveCount++;
             return GameState.VALID_MOVE;
         } else {
@@ -95,7 +86,7 @@ public class GameBoard {
     }
 
     /**
-     * Get player of the current position
+     * Get previousPlayer of the current position
      *
      * @param x X coordinate
      * @param y Y coordinate
@@ -121,7 +112,7 @@ public class GameBoard {
     public GameState getState() {
         // Column
         for (int i = 0, n = 0; i < board.length; i++) {
-            if (board[x][i] == player) {
+            if (board[x][i] == previousPlayer) {
                 n++;
             } else if (board[x][i] == GamePlayer.EMPTY) {
                 n = 0;
@@ -134,7 +125,7 @@ public class GameBoard {
         }
         // Row
         for (int i = 0, n = 0; i < board.length; i++) {
-            if (board[i][y] == player) {
+            if (board[i][y] == previousPlayer) {
                 n++;
             } else if (board[i][y] == GamePlayer.EMPTY) {
                 n = 0;
@@ -148,7 +139,7 @@ public class GameBoard {
         // Diagonal
         if (x == y) {
             for (int i = 0, n = 0; i < board.length; i++) {
-                if (board[i][i] == player) {
+                if (board[i][i] == previousPlayer) {
                     n++;
                 } else if (board[i][i] == GamePlayer.EMPTY) {
                     n = 0;
@@ -162,7 +153,7 @@ public class GameBoard {
         }
         // Reverse diagonal
         for (int i = 0, n = 0; i < board.length; i++) {
-            if (board[i][(board.length - 1) - i] == player) {
+            if (board[i][(board.length - 1) - i] == previousPlayer) {
                 n++;
             } else if (board[i][(board.length - 1) - i] == GamePlayer.EMPTY) {
                 n = 0;
@@ -182,7 +173,7 @@ public class GameBoard {
      * Format enums as traditional Tic-tac-toe symbols
      *
      * @param player Player to convert
-     * @return Symbol representing player 1, player 2 or empty
+     * @return Symbol representing previousPlayer 1, previousPlayer 2 or empty
      */
     private char playerToSymbol(GamePlayer player) {
         switch (player) {

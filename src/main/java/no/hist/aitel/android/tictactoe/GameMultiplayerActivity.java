@@ -30,7 +30,6 @@ public class GameMultiplayerActivity extends Activity {
     private static final int PORT = 8080;
     private static final String INIT_REQUEST = "init";
     private static final String INIT_RESPONSE_OK = "init ok";
-
     private GameView gameView;
     private TextView status;
     private int mode;
@@ -50,12 +49,28 @@ public class GameMultiplayerActivity extends Activity {
         setContentView(R.layout.game);
         SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
         this.mode = getIntent().getExtras().getInt("mode");
+        this.remoteIp = getIntent().getExtras().get("remoteIp") != null ?
+                getIntent().getExtras().get("remoteIp").toString() : null;
+        this.localIp = findIpAddress();
         this.boardSize = settings.getInt("boardSize", 3);
         this.inRow = settings.getInt("inRow", boardSize);
         this.status = (TextView) findViewById(R.id.status);
         this.gameView = (GameView) findViewById(R.id.game_view);
         this.gameView.setFocusable(true);
         this.gameView.setFocusableInTouchMode(true);
+        switch (mode) {
+            case MODE_MULTIPLAYER_HOST: {
+                gameView.makeBoard(boardSize, inRow);
+                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                gameView.invalidate();
+                serverThread.start();
+                break;
+            }
+            case MODE_MULTIPLAYER_JOIN: {
+                clientThread.start();
+                break;
+            }
+        }
         this.gameView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -72,21 +87,20 @@ public class GameMultiplayerActivity extends Activity {
                     if (canMove && x >= 0 && x < gameView.getBoardSize() && y >= 0 & y < gameView.getBoardSize()) {
                         int cell = x + gameView.getBoardSize() * y;
                         GamePlayer state = cell == gameView.getSelectedCell() ? gameView.getSelectedValue() : gameView.getBoard().get(x, y);
-                        state = state == GamePlayer.EMPTY ? gameView.getBoard().getPlayer() : GamePlayer.EMPTY;
+                        state = state == GamePlayer.EMPTY ? gameView.getBoard().getCurrentPlayer() : GamePlayer.EMPTY;
                         gameView.setSelectedCell(cell);
                         gameView.setSelectedValue(state);
                         if (gameView.getBoard().get(x, y) == GamePlayer.EMPTY) {
                             setCell(x, y, state);
                             if (gameView.getBoard().getState() == GameState.NEUTRAL) {
-                                if (gameView.getBoard().getPlayer() == GamePlayer.PLAYER1) {
-                                    gameView.getBoard().setPlayer(GamePlayer.PLAYER2);
+                                if (gameView.getBoard().getCurrentPlayer() == GamePlayer.PLAYER1) {
+                                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
                                     status.setText("Player 2's turn");
                                 } else {
-                                    gameView.getBoard().setPlayer(GamePlayer.PLAYER1);
+                                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                                     status.setText("Player 1's turn");
                                 }
                             }
-
                         }
                         canMove = false;
                     }
@@ -95,54 +109,41 @@ public class GameMultiplayerActivity extends Activity {
                 return false;
             }
         });
-        this.remoteIp = getIntent().getExtras().get("remoteIp") != null ? getIntent().getExtras().get("remoteIp").toString() : null;
-        this.localIp = findIpAddress();
-        switch (mode) {
-            case MODE_MULTIPLAYER_HOST: {
-                gameView.makeBoard(boardSize, inRow);
-                gameView.invalidate();
-                serverThread.start();
-                break;
+    }
+
+    private void setCell(int x, int y, GamePlayer player) {
+        if (gameView.getBoard().put(x, y, player) == GameState.VALID_MOVE) {
+            switch (mode) {
+                case MODE_MULTIPLAYER_HOST: {
+                    serverOut.printf("%d %d\n", x, y);
+                    break;
+                }
+                case MODE_MULTIPLAYER_JOIN: {
+                    clientOut.printf("%d %d\n", x, y);
+                    break;
+                }
             }
-            case MODE_MULTIPLAYER_JOIN: {
-                clientThread.start();
-                break;
+            GameState s = gameView.getBoard().getState();
+            switch (s) {
+                case WIN: {
+                    gameView.setEnabled(false);
+                    status.setText(String.format(getResources().getString(R.string.win),
+                            player.toString()));
+                    break;
+                }
+                case DRAW: {
+                    gameView.setEnabled(false);
+                    status.setText(R.string.draw);
+                    break;
+                }
             }
         }
+        gameView.invalidate();
     }
 
     private String findIpAddress() {
         final WifiInfo wifiInfo = ((WifiManager) getSystemService(WIFI_SERVICE)).getConnectionInfo();
         return Formatter.formatIpAddress(wifiInfo.getIpAddress());
-    }
-
-    public void setCell(int x, int y, GamePlayer player) {
-        //if (gameView.getBoard().put(x, y, player) == GameState.VALID_MOVE) {
-        switch (mode) {
-            case MODE_MULTIPLAYER_HOST: {
-                serverOut.printf("%d %d\n", x, y);
-                break;
-            }
-            case MODE_MULTIPLAYER_JOIN: {
-                clientOut.printf("%d %d\n", x, y);
-                break;
-            }
-        }
-        GameState s = gameView.getBoard().getState();
-        switch (s) {
-            case WIN: {
-                gameView.setEnabled(false);
-                status.setText(player.toString() + " WINS!");
-                break;
-            }
-            case DRAW: {
-                gameView.setEnabled(false);
-                status.setText("DRAW");
-                break;
-            }
-        }
-        //}
-        gameView.invalidate();
     }
 
     private final Handler handler = new Handler() {
@@ -203,6 +204,7 @@ public class GameMultiplayerActivity extends Activity {
                         final int[] boardParams = parseSize(line);
                         clientOut.println(INIT_RESPONSE_OK);
                         gameView.makeBoard(boardParams[0], boardParams[1]);
+                        gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                     } else {
                         final int[] xy = parseMove(line);
                         gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
@@ -213,10 +215,8 @@ public class GameMultiplayerActivity extends Activity {
             } catch (IOException e) {
                 Log.e(TAG, "IOException", e);
             }
-
         }
     };
-
     private final Thread serverThread = new Thread() {
         @Override
         public void run() {
