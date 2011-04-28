@@ -20,26 +20,28 @@ import java.net.Socket;
 
 public class GameActivity extends Activity {
 
-    private static final String TAG = GameActivity.class.getSimpleName();
-    private static final String PREFS_NAME = "Prefs";
     public static final int MODE_SINGLEPLAYER = 0;
     public static final int MODE_MULTIPLAYER_SHARED = 1;
     public static final int MODE_MULTIPLAYER_JOIN = 2;
     public static final int MODE_MULTIPLAYER_HOST = 3;
+
+    private static final String TAG = GameActivity.class.getSimpleName();
+    private static final String PREFS_NAME = "Prefs";
     private static final int PORT = 8080;
     private static final String INIT_REQUEST = "init";
     private static final String INIT_RESPONSE_OK = "init ok";
+
     private GameView gameView;
+    private LinearLayout gameViewHolder;
     private TextView status;
     private int mode;
     private int boardSize;
     private int inRow;
     private String localIp;
     private String remoteIp;
-    private PrintWriter out;
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    private LinearLayout gameViewHolder;
+    private PrintWriter out;
 
     @Override
     protected void onCreate(Bundle bundle) {
