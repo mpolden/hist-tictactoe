@@ -14,10 +14,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -32,7 +29,6 @@ public class GameActivity extends Activity {
     private static final int PORT = 8080;
     private static final String INIT_REQUEST = "init";
     private static final String INIT_RESPONSE_OK = "init ok";
-    private static final String INIT_DRAW = "init draw";
     private GameView gameView;
     private TextView status;
     private int mode;
@@ -44,7 +40,7 @@ public class GameActivity extends Activity {
     private PrintWriter serverOut;
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    LinearLayout gameViewHolder;
+    private LinearLayout gameViewHolder;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -96,20 +92,7 @@ public class GameActivity extends Activity {
                     int sxy = gameView.getSxy();
                     int x = (int) event.getX() / sxy;
                     int y = (int) event.getY() / sxy;
-                    //Toast.makeText(getApplicationContext(), String.valueOf(x + " " + y), Toast.LENGTH_SHORT).show();
                     if (gameView.isEnabled() && x >= 0 && x < gameView.getBoardSize() && y >= 0 & y < gameView.getBoardSize()) {
-                        //int cell = x + gameView.getBoardSize() * y;
-                        /*GamePlayer player;
-                        if (cell == gameView.getSelectedCell()) {
-                            player = gameView.getSelectedValue();
-                        } else {
-                            player = gameView.getBoard().get(x, y);
-                        }
-                        if (player == GamePlayer.EMPTY) {
-                            player = gameView.getBoard().getCurrentPlayer();
-                        }
-                        gameView.setSelectedCell(cell);
-                        gameView.setSelectedValue(player);*/
                         if (gameView.getBoard().get(x, y) == GamePlayer.EMPTY) {
                             setCell(x, y, gameView.getBoard().getCurrentPlayer());
                         }
@@ -218,7 +201,6 @@ public class GameActivity extends Activity {
         public void run() {
             try {
                 clientSocket = new Socket(remoteIp, PORT);
-                //sendMessage()
             } catch (IOException e) {
                 Log.e(TAG, "IOException", e);
             }
@@ -226,9 +208,10 @@ public class GameActivity extends Activity {
                 sendMessage(R.string.could_not_connect);
                 return;
             }
+            BufferedReader in = null;
             try {
                 clientOut = new PrintWriter(clientSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 String line;
                 while ((line = in.readLine()) != null) {
                     Log.d(TAG, "Client thread received: " + line);
@@ -252,6 +235,9 @@ public class GameActivity extends Activity {
                 }
             } catch (IOException e) {
                 Log.e(TAG, "IOException", e);
+                sendMessage(R.string.connection_failed);
+            } finally {
+                closeInAndOut(in, clientOut);
             }
         }
     };
@@ -283,10 +269,11 @@ public class GameActivity extends Activity {
                     Log.e(TAG, "Client socket is null");
                     return;
                 }
+                BufferedReader in = null;
                 try {
                     serverOut = new PrintWriter(clientSocket.getOutputStream(), true);
                     sendMessage(INIT_REQUEST);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String line;
                     while ((line = in.readLine()) != null) {
                         Log.d(TAG, "Server thread received: " + line);
@@ -302,12 +289,31 @@ public class GameActivity extends Activity {
                         gameView.postInvalidate();
                     }
                 } catch (IOException e) {
-                    sendMessage(R.string.connection_failed);
                     Log.w(TAG, "IOException", e);
+                    sendMessage(R.string.connection_failed);
+                } finally {
+                    closeInAndOut(in, serverOut);
                 }
             }
         }
     };
+
+    private void closeInAndOut(Reader in, Writer out) {
+        if (in != null) {
+            try {
+                in.close();
+            } catch (IOException e) {
+                Log.w(TAG, "IOException", e);
+            }
+        }
+        if (out != null) {
+            try {
+                out.close();
+            } catch (IOException e) {
+                Log.w(TAG, "IOException", e);
+            }
+        }
+    }
 
     @Override
     protected void onStop() {
