@@ -23,12 +23,13 @@ public class GameView extends View {
     private GamePlayer selectedValue = GamePlayer.EMPTY;
     private final Rect srcRect = new Rect();
     private final Rect dstRect = new Rect();
+    Drawable drawableBg;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         requestFocus();
-        Drawable drawableBg = getResources().getDrawable(R.drawable.lib_bg);
-        setBackgroundDrawable(drawableBg);
+        drawableBg = getResources().getDrawable(R.drawable.lib_bg);
+
         bmpPlayer1 = getResBitmap(R.drawable.cross);
         bmpPlayer2 = getResBitmap(R.drawable.circle);
         if (bmpPlayer1 != null) {
@@ -45,6 +46,7 @@ public class GameView extends View {
         this.boardSize = boardSize;
         this.board = new GameBoard(boardSize, inarow);
         GameView.this.postInvalidate();
+        setBackgroundDrawable(drawableBg);
     }
 
     public GameBoard getBoard() {
