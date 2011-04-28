@@ -29,8 +29,6 @@
                   android:screenOrientation="portrait"/>
         <activity android:name=".NetworkActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".GameMultiplayerActivity"
-                  android:screenOrientation="portrait"/>
     </application>
     <uses-sdk android:minSdkVersion="8"/>
 </manifest>

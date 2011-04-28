@@ -31,8 +31,8 @@ public class NetworkActivity extends Activity {
         findViewById(R.id.button_host).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent = new Intent(getApplicationContext(), GameMultiplayerActivity.class);
-                intent.putExtra("mode", GameMultiplayerActivity.MODE_MULTIPLAYER_HOST);
+                final Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                intent.putExtra("mode", GameActivity.MODE_MULTIPLAYER_HOST);
                 startActivity(intent);
             }
         });
@@ -59,8 +59,8 @@ public class NetworkActivity extends Activity {
                 button_ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final Intent intent = new Intent(getApplicationContext(), GameMultiplayerActivity.class);
-                        intent.putExtra("mode", GameMultiplayerActivity.MODE_MULTIPLAYER_JOIN);
+                        final Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                        intent.putExtra("mode", GameActivity.MODE_MULTIPLAYER_JOIN);
                         intent.putExtra("remoteIp", remoteIp.getText().toString());
                         startActivity(intent);
                         joinDialog.dismiss();

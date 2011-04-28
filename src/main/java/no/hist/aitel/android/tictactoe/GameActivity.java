@@ -20,7 +20,7 @@ import java.net.Socket;
 
 public class GameActivity extends Activity {
 
-    private static final String TAG = GameMultiplayerActivity.class.getSimpleName();
+    private static final String TAG = GameActivity.class.getSimpleName();
     private static final String PREFS_NAME = "Prefs";
     public static final int MODE_SINGLEPLAYER = 0;
     public static final int MODE_MULTIPLAYER_SHARED = 1;
