@@ -44,7 +44,7 @@ public class GameView extends View {
     public void makeBoard(int boardSize, int inarow) {
         this.boardSize = boardSize;
         this.board = new GameBoard(boardSize, inarow);
-        this.invalidate();
+        this.postInvalidate();
     }
 
     public GameBoard getBoard() {
