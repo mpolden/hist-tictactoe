@@ -30,7 +30,7 @@ public class GameMultiplayerActivity extends Activity {
     private static final int PORT = 8080;
     private static final String INIT_REQUEST = "init";
     private static final String INIT_RESPONSE_OK = "init ok";
-    private static final int INIT_DRAW_DELAY = 500;
+    private static final String INIT_DRAW = "init draw";
     private GameView gameView;
     private TextView status;
     private int mode;
@@ -154,7 +154,9 @@ public class GameMultiplayerActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             final String s = msg.getData().getString("message");
-            if (INIT_REQUEST.equals(s)) {
+            if (INIT_DRAW.equals(s)) {
+                gameView.invalidate();
+            } else if (INIT_REQUEST.equals(s)) {
                 Log.d(TAG, "Sent init request");
                 serverOut.printf("%s %d %d\n", INIT_REQUEST, boardSize, inRow);
             } else {
@@ -215,7 +217,7 @@ public class GameMultiplayerActivity extends Activity {
                         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
                         canMove = true;
                     }
-                    gameView.postInvalidateDelayed(INIT_DRAW_DELAY);
+                    sendMessage(INIT_DRAW);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "IOException", e);
@@ -264,7 +266,7 @@ public class GameMultiplayerActivity extends Activity {
                             final int[] xy = parseMove(line);
                             gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER2);
                             gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                            gameView.postInvalidate();
+                            sendMessage(INIT_DRAW);
                             canMove = true;
                         }
                     }
