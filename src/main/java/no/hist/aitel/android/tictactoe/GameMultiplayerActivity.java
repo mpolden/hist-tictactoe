@@ -24,7 +24,7 @@ import java.net.Socket;
 public class GameMultiplayerActivity extends Activity {
 
     private static final String TAG = GameMultiplayerActivity.class.getSimpleName();
-    private static final String PREFS_NAME = "tictactoe";
+    private static final String PREFS_NAME = "Prefs";
     public static final int MODE_MULTIPLAYER_JOIN = 2;
     public static final int MODE_MULTIPLAYER_HOST = 3;
     private static final int PORT = 8080;
@@ -207,7 +207,6 @@ public class GameMultiplayerActivity extends Activity {
                         final int[] boardParams = parseSize(line);
                         clientOut.println(INIT_RESPONSE_OK);
                         gameView.makeBoard(boardParams[0], boardParams[1]);
-
                         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                     } else {
                         final int[] xy = parseMove(line);
