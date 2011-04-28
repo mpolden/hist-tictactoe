@@ -25,8 +25,10 @@ public class GameView extends SurfaceView {
     private final Rect dstRect = new Rect();
     Drawable drawableBg;
 
-    public GameView(Context context, AttributeSet attrs) {
+    public GameView(Context context, AttributeSet attrs, int boardSize, int inRow) {
         super(context, attrs);
+        this.boardSize = boardSize;
+        this.board = new GameBoard(boardSize, inRow);
         requestFocus();
         drawableBg = getResources().getDrawable(R.drawable.lib_bg);
         setBackgroundDrawable(drawableBg);
@@ -41,12 +43,6 @@ public class GameView extends SurfaceView {
         linePaint.setColor(0xFFFFFFFF);
         linePaint.setStrokeWidth(5);
         linePaint.setStyle(Paint.Style.STROKE);
-    }
-
-    public void makeBoard(int boardSize, int inarow) {
-        this.boardSize = boardSize;
-        this.board = new GameBoard(boardSize, inarow);
-        GameView.this.postInvalidate();
     }
 
     public GameBoard getBoard() {

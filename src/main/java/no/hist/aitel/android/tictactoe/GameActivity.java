@@ -34,11 +34,10 @@ public class GameActivity extends Activity {
         inarow = settings.getInt("inarow", boardSize);
         status = (TextView) findViewById(R.id.status);
         LinearLayout gameViewHolder = (LinearLayout) findViewById(R.id.game_view_holder);
-        gameView = new GameView(this, null);
-
+        //gameView = new GameView(this, null);
         gameView.setFocusable(true);
         gameView.setFocusableInTouchMode(true);
-        gameView.makeBoard(boardSize, inarow);
+        //gameView.makeBoard(boardSize, inarow);
         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
         gameView.setOnTouchListener(new View.OnTouchListener() {
             @Override

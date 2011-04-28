@@ -43,6 +43,7 @@ public class GameMultiplayerActivity extends Activity {
     private PrintWriter serverOut;
     private ServerSocket serverSocket;
     private Socket clientSocket;
+    LinearLayout gameViewHolder;
     private boolean canMove;
 
     @Override
@@ -57,17 +58,10 @@ public class GameMultiplayerActivity extends Activity {
         this.boardSize = settings.getInt("boardSize", 3);
         this.inRow = settings.getInt("inRow", boardSize);
         this.status = (TextView) findViewById(R.id.status);
-        LinearLayout gameViewHolder = (LinearLayout) findViewById(R.id.game_view_holder);
-        this.gameView = new GameView(this, null);
-
-        //this.gameView = (GameView) findViewById(R.id.game_view);
-        this.gameView.setFocusable(true);
-        this.gameView.setFocusableInTouchMode(true);
+        this.gameViewHolder = (LinearLayout) findViewById(R.id.game_view_holder);
         switch (mode) {
             case MODE_MULTIPLAYER_HOST: {
-                gameView.makeBoard(boardSize, inRow);
-                //gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                gameView.invalidate();
+                createGameView(boardSize, inRow);
                 serverThread.start();
                 break;
             }
@@ -76,6 +70,13 @@ public class GameMultiplayerActivity extends Activity {
                 break;
             }
         }
+    }
+
+    private void createGameView(int boardSize, int inRow) {
+        this.gameView = new GameView(this, null, boardSize, inRow);
+        //this.gameView = (GameView) findViewById(R.id.game_view);
+        this.gameView.setFocusable(true);
+        this.gameView.setFocusableInTouchMode(true);
         this.gameView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -159,9 +160,7 @@ public class GameMultiplayerActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             final String s = msg.getData().getString("message");
-            if (INIT_DRAW.equals(s)) {
-                gameView.invalidate();
-            } else if (INIT_REQUEST.equals(s)) {
+            if (INIT_REQUEST.equals(s)) {
                 Log.d(TAG, "Sent init request");
                 serverOut.printf("%s %d %d\n", INIT_REQUEST, boardSize, inRow);
             } else {
@@ -214,15 +213,20 @@ public class GameMultiplayerActivity extends Activity {
                     if (line.startsWith(INIT_REQUEST)) {
                         final int[] boardParams = parseSize(line);
                         clientOut.println(INIT_RESPONSE_OK);
-                        gameView.makeBoard(boardParams[0], boardParams[1]);
-                        gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                createGameView(boardParams[0], boardParams[1]);
+                                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                            }
+                        });
                     } else {
                         final int[] xy = parseMove(line);
                         gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
                         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
+                        gameView.postInvalidate();
                         canMove = true;
                     }
-                    sendMessage(INIT_DRAW);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "IOException", e);
@@ -271,9 +275,9 @@ public class GameMultiplayerActivity extends Activity {
                             final int[] xy = parseMove(line);
                             gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER2);
                             gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                            sendMessage(INIT_DRAW);
                             canMove = true;
                         }
+                        gameView.postInvalidate();
                     }
                 } catch (IOException e) {
                     sendMessage(R.string.connection_failed);
