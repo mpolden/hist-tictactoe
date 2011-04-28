@@ -227,10 +227,15 @@ public class GameActivity extends Activity {
                         });
                     } else {
                         final int[] xy = parseMove(line);
-                        gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
-                        gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
+                                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
+                                gameView.setEnabled(true);
+                            }
+                        });
                         gameView.postInvalidate();
-                        gameView.setEnabled(true);
                     }
                 }
             } catch (IOException e) {
@@ -278,13 +283,23 @@ public class GameActivity extends Activity {
                     while ((line = in.readLine()) != null) {
                         Log.d(TAG, "Server thread received: " + line);
                         if (INIT_RESPONSE_OK.equals(line)) {
-                            gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                            gameView.setEnabled(true);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                                    gameView.setEnabled(true);
+                                }
+                            });
                         } else {
                             final int[] xy = parseMove(line);
-                            gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER2);
-                            gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                            gameView.setEnabled(true);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER2);
+                                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                                    gameView.setEnabled(true);
+                                }
+                            });
                         }
                         gameView.postInvalidate();
                     }
