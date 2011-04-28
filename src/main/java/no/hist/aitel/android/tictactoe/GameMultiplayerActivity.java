@@ -44,7 +44,6 @@ public class GameMultiplayerActivity extends Activity {
     private ServerSocket serverSocket;
     private Socket clientSocket;
     LinearLayout gameViewHolder;
-    private boolean canMove;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -90,7 +89,7 @@ public class GameMultiplayerActivity extends Activity {
                     x = (x - 0) / sxy;
                     y = (y - 0) / sxy;
                     Toast.makeText(getApplicationContext(), String.valueOf(x + " " + y), Toast.LENGTH_SHORT).show();
-                    if (canMove && x >= 0 && x < gameView.getBoardSize() && y >= 0 & y < gameView.getBoardSize()) {
+                    if (gameView.isEnabled() && x >= 0 && x < gameView.getBoardSize() && y >= 0 & y < gameView.getBoardSize()) {
                         int cell = x + gameView.getBoardSize() * y;
                         GamePlayer state = cell == gameView.getSelectedCell() ? gameView.getSelectedValue() : gameView.getBoard().get(x, y);
                         state = state == GamePlayer.EMPTY ? gameView.getBoard().getCurrentPlayer() : GamePlayer.EMPTY;
@@ -109,7 +108,7 @@ public class GameMultiplayerActivity extends Activity {
                                 }
                             }*/
                         }
-                        canMove = false;
+                        gameView.setEnabled(false);
                     }
                     return true;
                 }
@@ -225,7 +224,7 @@ public class GameMultiplayerActivity extends Activity {
                         gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
                         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
                         gameView.postInvalidate();
-                        canMove = true;
+                        gameView.setEnabled(true);
                     }
                 }
             } catch (IOException e) {
@@ -270,12 +269,12 @@ public class GameMultiplayerActivity extends Activity {
                         Log.d(TAG, "Server thread received: " + line);
                         if (INIT_RESPONSE_OK.equals(line)) {
                             gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                            canMove = true;
+                            gameView.setEnabled(true);
                         } else {
                             final int[] xy = parseMove(line);
                             gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER2);
                             gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                            canMove = true;
+                            gameView.setEnabled(true);
                         }
                         gameView.postInvalidate();
                     }
