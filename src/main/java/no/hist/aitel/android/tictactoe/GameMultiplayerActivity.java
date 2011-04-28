@@ -213,7 +213,6 @@ public class GameMultiplayerActivity extends Activity {
                         final int[] xy = parseMove(line);
                         gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
                         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
-                        //gameView.postInvalidate();
                         canMove = true;
                     }
                     gameView.postInvalidateDelayed(INIT_DRAW_DELAY);
