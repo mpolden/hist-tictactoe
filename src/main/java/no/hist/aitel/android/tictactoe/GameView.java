@@ -29,7 +29,7 @@ public class GameView extends View {
         super(context, attrs);
         requestFocus();
         drawableBg = getResources().getDrawable(R.drawable.lib_bg);
-
+        setBackgroundDrawable(drawableBg);
         bmpPlayer1 = getResBitmap(R.drawable.cross);
         bmpPlayer2 = getResBitmap(R.drawable.circle);
         if (bmpPlayer1 != null) {
@@ -45,8 +45,6 @@ public class GameView extends View {
     public void makeBoard(int boardSize, int inarow) {
         this.boardSize = boardSize;
         this.board = new GameBoard(boardSize, inarow);
-        GameView.this.postInvalidate();
-        setBackgroundDrawable(drawableBg);
     }
 
     public GameBoard getBoard() {
