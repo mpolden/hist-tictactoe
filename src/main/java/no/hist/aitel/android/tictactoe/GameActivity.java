@@ -68,6 +68,7 @@ public class GameActivity extends Activity {
             }
             case MODE_MULTIPLAYER_HOST: {
                 createGameView(boardSize, inRow);
+                gameView.setEnabled(false);
                 serverThread.start();
                 break;
             }
@@ -126,13 +127,11 @@ public class GameActivity extends Activity {
                     break;
                 }
                 case MODE_MULTIPLAYER_HOST: {
-                    gameView.setEnabled(false);
                     serverOut.printf("%d %d\n", x, y);
                     gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
                     break;
                 }
                 case MODE_MULTIPLAYER_JOIN: {
-                    gameView.setEnabled(false);
                     clientOut.printf("%d %d\n", x, y);
                     gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                     break;
@@ -222,6 +221,7 @@ public class GameActivity extends Activity {
                             @Override
                             public void run() {
                                 createGameView(boardParams[0], boardParams[1]);
+                                gameView.setEnabled(false);
                                 gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                             }
                         });
