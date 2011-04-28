@@ -59,7 +59,6 @@ public class GameMultiplayerActivity extends Activity {
         this.gameView = (GameView) findViewById(R.id.game_view);
         this.gameView.setFocusable(true);
         this.gameView.setFocusableInTouchMode(true);
-        this.gameView.setWillNotDraw(false);
         switch (mode) {
             case MODE_MULTIPLAYER_HOST: {
                 gameView.makeBoard(boardSize, inRow);
