@@ -6,8 +6,9 @@ import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
+import android.view.View;
 
-public class GameView extends SurfaceView {
+public class GameView extends View {
 
     private static final int MARGIN = 0;
     private Paint linePaint;
@@ -32,7 +33,7 @@ public class GameView extends SurfaceView {
         requestFocus();
         drawableBg = getResources().getDrawable(R.drawable.lib_bg);
         setBackgroundDrawable(drawableBg);
-        setWillNotDraw(false);
+        //setWillNotDraw(false);
         bmpPlayer1 = getResBitmap(R.drawable.cross);
         bmpPlayer2 = getResBitmap(R.drawable.circle);
         if (bmpPlayer1 != null) {
