@@ -13,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -64,10 +63,12 @@ public class GameActivity extends Activity {
             case MODE_SINGLEPLAYER: {
                 createGameView(boardSize, inRow);
                 gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                break;
             }
             case MODE_MULTIPLAYER_SHARED: {
                 createGameView(boardSize, inRow);
                 gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                break;
             }
             case MODE_MULTIPLAYER_HOST: {
                 createGameView(boardSize, inRow);
@@ -92,22 +93,26 @@ public class GameActivity extends Activity {
                 if (action == MotionEvent.ACTION_DOWN) {
                     return true;
                 } else if (action == MotionEvent.ACTION_UP) {
-                    int x = (int) event.getX();
-                    int y = (int) event.getY();
                     int sxy = gameView.getSxy();
-                    x = (x - 0) / sxy;
-                    y = (y - 0) / sxy;
-                    Toast.makeText(getApplicationContext(), String.valueOf(x + " " + y), Toast.LENGTH_SHORT).show();
+                    int x = (int) event.getX() / sxy;
+                    int y = (int) event.getY() / sxy;
+                    //Toast.makeText(getApplicationContext(), String.valueOf(x + " " + y), Toast.LENGTH_SHORT).show();
                     if (gameView.isEnabled() && x >= 0 && x < gameView.getBoardSize() && y >= 0 & y < gameView.getBoardSize()) {
-                        int cell = x + gameView.getBoardSize() * y;
-                        GamePlayer state = cell == gameView.getSelectedCell() ? gameView.getSelectedValue() : gameView.getBoard().get(x, y);
-                        state = state == GamePlayer.EMPTY ? gameView.getBoard().getCurrentPlayer() : GamePlayer.EMPTY;
-                        gameView.setSelectedCell(cell);
-                        gameView.setSelectedValue(state);
-                        if (gameView.getBoard().get(x, y) == GamePlayer.EMPTY) {
-                            setCell(x, y, state);
+                        //int cell = x + gameView.getBoardSize() * y;
+                        /*GamePlayer player;
+                        if (cell == gameView.getSelectedCell()) {
+                            player = gameView.getSelectedValue();
+                        } else {
+                            player = gameView.getBoard().get(x, y);
                         }
-
+                        if (player == GamePlayer.EMPTY) {
+                            player = gameView.getBoard().getCurrentPlayer();
+                        }
+                        gameView.setSelectedCell(cell);
+                        gameView.setSelectedValue(player);*/
+                        if (gameView.getBoard().get(x, y) == GamePlayer.EMPTY) {
+                            setCell(x, y, gameView.getBoard().getCurrentPlayer());
+                        }
                     }
                     return true;
                 }
