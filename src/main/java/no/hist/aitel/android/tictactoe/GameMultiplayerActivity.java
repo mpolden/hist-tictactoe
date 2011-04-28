@@ -61,7 +61,7 @@ public class GameMultiplayerActivity extends Activity {
         switch (mode) {
             case MODE_MULTIPLAYER_HOST: {
                 gameView.makeBoard(boardSize, inRow);
-                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                //gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                 gameView.invalidate();
                 serverThread.start();
                 break;
@@ -92,6 +92,7 @@ public class GameMultiplayerActivity extends Activity {
                         gameView.setSelectedValue(state);
                         if (gameView.getBoard().get(x, y) == GamePlayer.EMPTY) {
                             setCell(x, y, state);
+                            /*
                             if (gameView.getBoard().getState() == GameState.NEUTRAL) {
                                 if (gameView.getBoard().getCurrentPlayer() == GamePlayer.PLAYER1) {
                                     gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
@@ -100,7 +101,7 @@ public class GameMultiplayerActivity extends Activity {
                                     gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                                     status.setText("Player 1's turn");
                                 }
-                            }
+                            }*/
                         }
                         canMove = false;
                     }
@@ -116,10 +117,12 @@ public class GameMultiplayerActivity extends Activity {
             switch (mode) {
                 case MODE_MULTIPLAYER_HOST: {
                     serverOut.printf("%d %d\n", x, y);
+                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
                     break;
                 }
                 case MODE_MULTIPLAYER_JOIN: {
                     clientOut.printf("%d %d\n", x, y);
+                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                     break;
                 }
             }
@@ -208,6 +211,7 @@ public class GameMultiplayerActivity extends Activity {
                     } else {
                         final int[] xy = parseMove(line);
                         gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
+                        gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
                         canMove = true;
                     }
                     gameView.postInvalidate();
@@ -253,10 +257,12 @@ public class GameMultiplayerActivity extends Activity {
                     while ((line = in.readLine()) != null) {
                         Log.d(TAG, "Server thread received: " + line);
                         if (INIT_RESPONSE_OK.equals(line)) {
+                            gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                             canMove = true;
                         } else {
                             final int[] xy = parseMove(line);
                             gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER2);
+                            gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                             gameView.postInvalidate();
                             canMove = true;
                         }
