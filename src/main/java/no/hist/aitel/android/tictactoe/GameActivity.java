@@ -129,11 +129,13 @@ public class GameActivity extends Activity {
                 case MODE_MULTIPLAYER_HOST: {
                     serverOut.printf("%d %d\n", x, y);
                     gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
+                    gameView.setEnabled(false);
                     break;
                 }
                 case MODE_MULTIPLAYER_JOIN: {
                     clientOut.printf("%d %d\n", x, y);
                     gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                    gameView.setEnabled(false);
                     break;
                 }
             }
