@@ -404,4 +404,84 @@ public class GameBoardTest {
         assertEquals(PLAYER1, b.get(6, 2));
         assertEquals(WIN, b.getState());
     }
+
+    /**
+     * Test 7x7 game with empty sequences
+     */
+    @Test
+    public void testGame7x7_DiagonalSequenceWithEmpty() {
+        final GameBoard b = new GameBoard(7, 4);
+        assertEquals(VALID_MOVE, b.put(6, 1, PLAYER2));
+        assertEquals(PLAYER2, b.get(6, 1));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(2, 0, PLAYER1));
+        assertEquals(PLAYER1, b.get(2, 0));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(1, 1, PLAYER2));
+        assertEquals(PLAYER2, b.get(1, 1));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(3, 0, PLAYER1));
+        assertEquals(PLAYER1, b.get(3, 0));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(2, 1, PLAYER2));
+        assertEquals(PLAYER2, b.get(2, 1));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(3, 2, PLAYER1));
+        assertEquals(PLAYER1, b.get(3, 2));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(3, 3, PLAYER2));
+        assertEquals(PLAYER2, b.get(3, 3));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(4, 2, PLAYER1));
+        assertEquals(PLAYER1, b.get(4, 2));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(0, 1, PLAYER2));
+        assertEquals(PLAYER2, b.get(0, 1));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(5, 5, PLAYER1));
+        assertEquals(PLAYER1, b.get(5, 5));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(1, 0, PLAYER2));
+        assertEquals(PLAYER2, b.get(1, 0));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(5, 2, PLAYER1));
+        assertEquals(PLAYER1, b.get(5, 2));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(0, 0, PLAYER2));
+        assertEquals(PLAYER2, b.get(0, 0));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(4, 6, PLAYER1));
+        assertEquals(PLAYER1, b.get(4, 6));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(5, 3, PLAYER2));
+        assertEquals(PLAYER2, b.get(5, 3));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(0, 2, PLAYER1));
+        assertEquals(PLAYER1, b.get(0, 2));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(6, 3, PLAYER2));
+        assertEquals(PLAYER2, b.get(6, 3));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(2, 3, PLAYER1));
+        assertEquals(PLAYER1, b.get(2, 3));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(0, 6, PLAYER2));
+        assertEquals(PLAYER2, b.get(0, 6));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(0, 5, PLAYER1));
+        assertEquals(PLAYER1, b.get(0, 5));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(6, 6, PLAYER2));
+        assertEquals(PLAYER2, b.get(6, 6));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(4, 1, PLAYER1));
+        assertEquals(PLAYER1, b.get(4, 1));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(6, 2, PLAYER2));
+        assertEquals(PLAYER2, b.get(6, 2));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(1, 4, PLAYER1));
+        assertEquals(PLAYER1, b.get(1, 4));
+        assertEquals(WIN, b.getState());
+    }
 }

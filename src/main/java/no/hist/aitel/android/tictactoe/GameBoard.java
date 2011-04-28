@@ -152,14 +152,40 @@ public class GameBoard {
             }
         }
         // Reverse diagonal
-        for (int i = 0, n = 0; i < board.length; i++) {
-            if (board[i][(board.length - 1) - i] == previousPlayer) {
-                n++;
-            } else if (board[i][(board.length - 1) - i] == GamePlayer.EMPTY) {
-                n = 0;
+        for (int j = 0; j < (board.length * 2) - 1; j++) {
+            int initY = 0;
+            for (int X = 0, Y = initY, n = 0; X < board.length - 1; X++) {
+                if (Y == 0) {
+                    Y = ++initY;
+                    X = 0;
+                    n = 0;
+                }
+                if (board[X][Y] == previousPlayer) {
+                    n++;
+                    if (n == inRow) {
+                        return GameState.WIN;
+                    }
+                } else if (board[X][Y] == GamePlayer.EMPTY) {
+                    n = 0;
+                }
+                Y--;
             }
-            if (n == inRow) {
-                return GameState.WIN;
+            int initX = 1;
+            for (int X = initX, Y = board.length - 1, n = 0; X < board.length - 1 && Y < board.length - 1; X++) {
+                if (board[X][Y] == previousPlayer) {
+                    n++;
+                    if (n == inRow) {
+                        return GameState.WIN;
+                    }
+                } else if (board[X][Y] == GamePlayer.EMPTY) {
+                    n = 0;
+                }
+                if (X == board.length - 1) {
+                    Y = board.length - 1;
+                    X = ++initX;
+                    n = 0;
+                }
+                Y--;
             }
         }
         // Draw
