@@ -13,10 +13,10 @@ public class OptionsActivity extends Activity {
 
     public static final String PREFS_NAME = "Prefs";
     private Spinner boardsizeSpinner;
-    private Spinner inarowSpinner;
+    private Spinner inRowSpinner;
     private int boardSize;
-    private int inarow;
-    private ArrayAdapter<Integer> inarowAdapter;
+    private int inRow;
+    private ArrayAdapter<Integer> inRowAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +30,13 @@ public class OptionsActivity extends Activity {
         boardsizeSpinner.setAdapter(boardSizeAdapter);
         boardsizeSpinner.setOnItemSelectedListener(new BoardSizeSelectionListener());
         boardsizeSpinner.setSelection(boardSize - 3);
-        inarow = settings.getInt("inarow", boardSize);
-        inarowSpinner = (Spinner) findViewById(R.id.spinner_inarow);
-        inarowAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item);
-        inarowAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        inarowSpinner.setAdapter(inarowAdapter);
-        inarowSpinner.setOnItemSelectedListener(new InarowSelectionListener());
-        inarowSpinner.setSelection(inarow - 3);
+        inRow = settings.getInt("inRow", boardSize);
+        inRowSpinner = (Spinner) findViewById(R.id.spinner_inarow);
+        inRowAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item);
+        inRowAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        inRowSpinner.setAdapter(inRowAdapter);
+        inRowSpinner.setOnItemSelectedListener(new InarowSelectionListener());
+        inRowSpinner.setSelection(inRow - 3);
     }
 
     private class BoardSizeSelectionListener implements AdapterView.OnItemSelectedListener {
@@ -53,7 +53,7 @@ public class OptionsActivity extends Activity {
     private class InarowSelectionListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-            inarow = (Integer) parent.getItemAtPosition(pos);
+            inRow = (Integer) parent.getItemAtPosition(pos);
         }
 
         public void onNothingSelected(AdapterView parent) {
@@ -61,9 +61,9 @@ public class OptionsActivity extends Activity {
     }
 
     private void updateInarowAdapter() {
-        inarowAdapter.clear();
+        inRowAdapter.clear();
         for (int i = 3; i <= boardSize; i++) {
-            inarowAdapter.add(new Integer(i));
+            inRowAdapter.add(new Integer(i));
         }
     }
 
@@ -72,7 +72,7 @@ public class OptionsActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("boardSize", boardSize);
-        editor.putInt("inarow", inarow);
+        editor.putInt("inRow", inRow);
         editor.commit();
     }
 }
