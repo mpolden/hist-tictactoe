@@ -101,10 +101,10 @@ public class GameView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         if (board == null) {
             return;
         }
+        super.onDraw(canvas);
         int sxy = this.sxy;
         int sn = sxy * boardSize;
         int x7 = offsetX;
