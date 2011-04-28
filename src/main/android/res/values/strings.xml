@@ -15,13 +15,15 @@
         this
         address to play with you
     </string>
-    <string name="join_game_dialog">Please enter the IP address of the player hosting the game.</string>
+    <string name="join_game_dialog">Please enter the IP address of the previousPlayer hosting the game.</string>
     <string name="connect">Koble til</string>
     <string name="ok">OK</string>
-    <string name="waiting_for_player">Waiting for player to connect to %s</string>
+    <string name="waiting_for_player">Waiting for previousPlayer to connect to %s</string>
     <string name="connected">Connected</string>
     <string name="connection_failed">Connection failed. Please reconnect.</string>
     <string name="server_socket_failed">Could not start server.</string>
     <string name="client_socket_failed">Client connection failed.</string>
     <string name="could_not_connect">Could not connect to server.</string>
+    <string name="win">%s wins!</string>
+    <string name="draw">Draw</string>
 </resources>
