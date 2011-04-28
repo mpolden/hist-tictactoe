@@ -30,7 +30,7 @@ public class GameMultiplayerActivity extends Activity {
     private static final int PORT = 8080;
     private static final String INIT_REQUEST = "init";
     private static final String INIT_RESPONSE_OK = "init ok";
-    private static final int INIT_DRAW_DELAY = 100;
+    private static final int INIT_DRAW_DELAY = 1000;
     private GameView gameView;
     private TextView status;
     private int mode;
