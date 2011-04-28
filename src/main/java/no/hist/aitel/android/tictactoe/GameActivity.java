@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,9 +33,13 @@ public class GameActivity extends Activity {
         boardSize = settings.getInt("boardSize", 3);
         inarow = settings.getInt("inarow", boardSize);
         status = (TextView) findViewById(R.id.status);
-        gameView = (GameView) findViewById(R.id.game_view);
+        LinearLayout gameViewHolder = (LinearLayout) findViewById(R.id.game_view_holder);
+        gameView = new GameView(this, null);
+
         gameView.setFocusable(true);
         gameView.setFocusableInTouchMode(true);
+        gameView.makeBoard(boardSize, inarow);
+        gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
         gameView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -72,16 +77,17 @@ public class GameActivity extends Activity {
                 return false;
             }
         });
+        gameViewHolder.addView(gameView);
         switch (mode) {
             case MODE_SINGLEPLAYER: {
-                gameView.makeBoard(boardSize, inarow);
-                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                //gameView.makeBoard(boardSize, inarow);
+                //gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                 canMove = true;
                 break;
             }
             case MODE_MULTIPLAYER_SHARED: {
-                gameView.makeBoard(boardSize, inarow);
-                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                //gameView.makeBoard(boardSize, inarow);
+                //gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                 canMove = true;
                 break;
             }

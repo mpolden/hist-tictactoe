@@ -11,6 +11,7 @@ import android.text.format.Formatter;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +57,10 @@ public class GameMultiplayerActivity extends Activity {
         this.boardSize = settings.getInt("boardSize", 3);
         this.inRow = settings.getInt("inRow", boardSize);
         this.status = (TextView) findViewById(R.id.status);
-        this.gameView = (GameView) findViewById(R.id.game_view);
+        LinearLayout gameViewHolder = (LinearLayout) findViewById(R.id.game_view_holder);
+        this.gameView = new GameView(this, null);
+
+        //this.gameView = (GameView) findViewById(R.id.game_view);
         this.gameView.setFocusable(true);
         this.gameView.setFocusableInTouchMode(true);
         switch (mode) {
@@ -111,6 +115,7 @@ public class GameMultiplayerActivity extends Activity {
                 return false;
             }
         });
+        gameViewHolder.addView(gameView);
     }
 
     private void setCell(int x, int y, GamePlayer player) {

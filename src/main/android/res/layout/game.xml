@@ -11,12 +11,18 @@
               android:layout_width="wrap_content"
               android:textColor="@android:color/white"/>
 
-    <no.hist.aitel.android.tictactoe.GameView
+    <LinearLayout android:id="@+id/game_view_holder"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_margin="20dip"
+        android:layout_weight="1"></LinearLayout>
+
+    <!--<no.hist.aitel.android.tictactoe.GameView
             android:id="@+id/game_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dip"
-            android:layout_weight="1"/>
+            android:layout_weight="1"/>-->
 
 
 </LinearLayout>
