@@ -9,9 +9,9 @@ public class GameBoard {
 
     private static final int MIN_BOARD_SIZE = 3;
     private static final int MIN_IN_ROW = 3;
-    private int lengthToWin;
     private int moveCount;
-    private GamePlayer[][] board;
+    private final int lengthToWin;
+    private final GamePlayer[][] board;
     private GamePlayer previousPlayer;
     private GamePlayer currentPlayer;
 
@@ -42,10 +42,20 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Get current player
+     *
+     * @return Current player
+     */
     public GamePlayer getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * Set current player
+     *
+     * @param currentPlayer Current player
+     */
     public void setCurrentPlayer(GamePlayer currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
@@ -53,12 +63,12 @@ public class GameBoard {
     /**
      * Set the position to the given previousPlayer
      *
-     * @param x X coordinate
-     * @param y Y coordinate
-     * @param p Player to set
+     * @param x      X coordinate
+     * @param y      Y coordinate
+     * @param player Player to set
      * @return Game state
      */
-    public GameState put(int x, int y, GamePlayer p) {
+    public GameState put(int x, int y, GamePlayer player) {
         if (x < 0 || x >= board.length) {
             throw new IllegalArgumentException(
                     String.format("x must in range(0,%d)", board.length - 1));
@@ -67,14 +77,14 @@ public class GameBoard {
             throw new IllegalArgumentException(
                     String.format("y must be in range(0,%d)", board[x].length - 1));
         }
-        if (p == previousPlayer) {
+        if (player == previousPlayer) {
             throw new IllegalArgumentException(
-                    String.format("Player %s had previous move, can't move again", p));
+                    String.format("Player %s had previous move, can't move again", player));
         }
         if (board[x][y] == GamePlayer.EMPTY) {
-            board[x][y] = p;
-            this.previousPlayer = p;
+            board[x][y] = player;
             moveCount++;
+            this.previousPlayer = player;
             return GameState.VALID_MOVE;
         } else {
             return GameState.INVALID_MOVE;
