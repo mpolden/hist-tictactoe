@@ -29,6 +29,7 @@ public class GameActivity extends Activity {
     private static final int PORT = 8080;
     private static final String INIT_REQUEST = "init";
     private static final String INIT_RESPONSE_OK = "init ok";
+    private static final String GAME_WON = "won";
     private GameView gameView;
     private TextView status;
     private int mode;
@@ -36,8 +37,7 @@ public class GameActivity extends Activity {
     private int inRow;
     private String localIp;
     private String remoteIp;
-    private PrintWriter clientOut;
-    private PrintWriter serverOut;
+    private PrintWriter out;
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private LinearLayout gameViewHolder;
@@ -95,7 +95,9 @@ public class GameActivity extends Activity {
                     int y = (int) event.getY() / sxy;
                     if (gameView.isEnabled() && x >= 0 && x < gameView.getBoardSize() && y >= 0 & y < gameView.getBoardSize()) {
                         if (gameView.getBoard().get(x, y) == GamePlayer.EMPTY) {
-                            setCell(x, y, gameView.getBoard().getCurrentPlayer());
+                            GamePlayer player = gameView.getBoard().getCurrentPlayer();
+                            putPlayer(x, y, player);
+                            updateState(player);
                         }
                     }
                     return true;
@@ -106,55 +108,59 @@ public class GameActivity extends Activity {
         gameViewHolder.addView(gameView);
     }
 
-    private void setCell(int x, int y, GamePlayer player) {
-        if (gameView.getBoard().put(x, y, player) == GameState.VALID_MOVE) {
-            switch (mode) {
-                case MODE_SINGLEPLAYER: {
-                    gameView.setEnabled(false);
-                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
-                    break;
-                }
-                case MODE_MULTIPLAYER_SHARED: {
-                    if (gameView.getBoard().getState() == GameState.NEUTRAL) {
-                        if (gameView.getBoard().getCurrentPlayer() == GamePlayer.PLAYER1) {
-                            gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
-                            status.setText("Player 2's turn");
-                        } else {
-                            gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                            status.setText("Player 1's turn");
-                        }
-                    }
-                    break;
-                }
-                case MODE_MULTIPLAYER_HOST: {
-                    serverOut.printf("%d %d\n", x, y);
-                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
-                    gameView.setEnabled(false);
-                    break;
-                }
-                case MODE_MULTIPLAYER_JOIN: {
-                    clientOut.printf("%d %d\n", x, y);
-                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                    gameView.setEnabled(false);
-                    break;
-                }
+    private void putPlayer(int x, int y, GamePlayer player) {
+        if (gameView.getBoard().put(x, y, player) == GameState.INVALID_MOVE) {
+            return;
+        }
+        switch (mode) {
+            case MODE_SINGLEPLAYER: {
+                gameView.setEnabled(false);
+                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
+                break;
             }
-            GameState s = gameView.getBoard().getState();
-            switch (s) {
-                case WIN: {
-                    gameView.setEnabled(false);
-                    status.setText(String.format(getResources().getString(R.string.win),
-                            player.toString()));
-                    break;
+            case MODE_MULTIPLAYER_SHARED: {
+                if (gameView.getBoard().getState() == GameState.NEUTRAL) {
+                    if (gameView.getBoard().getCurrentPlayer() == GamePlayer.PLAYER1) {
+                        gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
+                        status.setText("Player 2's turn");
+                    } else {
+                        gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                        status.setText("Player 1's turn");
+                    }
                 }
-                case DRAW: {
-                    gameView.setEnabled(false);
-                    status.setText(R.string.draw);
-                    break;
-                }
+                break;
+            }
+            case MODE_MULTIPLAYER_HOST: {
+                out.printf("%d %d\n", x, y);
+                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
+                gameView.setEnabled(false);
+                break;
+            }
+            case MODE_MULTIPLAYER_JOIN: {
+                out.printf("%d %d\n", x, y);
+                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                gameView.setEnabled(false);
+                break;
             }
         }
         gameView.invalidate();
+    }
+
+    private void updateState(GamePlayer player) {
+        GameState s = gameView.getBoard().getState();
+        switch (s) {
+            case WIN: {
+                gameView.setEnabled(false);
+                status.setText(String.format(getResources().getString(R.string.win),
+                        player.toString()));
+                break;
+            }
+            case DRAW: {
+                gameView.setEnabled(false);
+                status.setText(R.string.draw);
+                break;
+            }
+        }
     }
 
     private String findIpAddress() {
@@ -168,7 +174,7 @@ public class GameActivity extends Activity {
             final String s = msg.getData().getString("message");
             if (INIT_REQUEST.equals(s)) {
                 Log.d(TAG, "Sent init request");
-                serverOut.printf("%s %d %d\n", INIT_REQUEST, boardSize, inRow);
+                out.printf("%s %d %d\n", INIT_REQUEST, boardSize, inRow);
             } else {
                 status.setText(s);
             }
@@ -211,20 +217,20 @@ public class GameActivity extends Activity {
             }
             BufferedReader in = null;
             try {
-                clientOut = new PrintWriter(clientSocket.getOutputStream(), true);
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 String line;
                 while ((line = in.readLine()) != null) {
                     Log.d(TAG, "Client thread received: " + line);
                     if (line.startsWith(INIT_REQUEST)) {
                         final int[] boardParams = parseSize(line);
-                        clientOut.println(INIT_RESPONSE_OK);
+                        out.println(INIT_RESPONSE_OK);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 createGameView(boardParams[0], boardParams[1]);
-                                gameView.setEnabled(false);
                                 gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                                gameView.setEnabled(false);
                             }
                         });
                     } else {
@@ -233,8 +239,9 @@ public class GameActivity extends Activity {
                             @Override
                             public void run() {
                                 gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
-                                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
                                 gameView.setEnabled(true);
+                                updateState(gameView.getBoard().getCurrentPlayer());
+                                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
                             }
                         });
                         gameView.postInvalidate();
@@ -244,7 +251,7 @@ public class GameActivity extends Activity {
                 Log.e(TAG, "IOException", e);
                 sendMessage(R.string.connection_failed);
             } finally {
-                closeInAndOut(in, clientOut);
+                closeInAndOut(in, out);
             }
         }
     };
@@ -278,7 +285,7 @@ public class GameActivity extends Activity {
                 }
                 BufferedReader in = null;
                 try {
-                    serverOut = new PrintWriter(clientSocket.getOutputStream(), true);
+                    out = new PrintWriter(clientSocket.getOutputStream(), true);
                     sendMessage(INIT_REQUEST);
                     in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String line;
@@ -298,8 +305,9 @@ public class GameActivity extends Activity {
                                 @Override
                                 public void run() {
                                     gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER2);
-                                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                                     gameView.setEnabled(true);
+                                    updateState(gameView.getBoard().getCurrentPlayer());
+                                    gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                                 }
                             });
                         }
@@ -309,7 +317,7 @@ public class GameActivity extends Activity {
                     Log.w(TAG, "IOException", e);
                     sendMessage(R.string.connection_failed);
                 } finally {
-                    closeInAndOut(in, serverOut);
+                    closeInAndOut(in, out);
                 }
             }
         }
