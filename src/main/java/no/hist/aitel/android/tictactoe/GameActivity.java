@@ -75,10 +75,13 @@ public class GameActivity extends Activity {
         switch (mode) {
             case MODE_SINGLEPLAYER: {
                 gameView.makeBoard(boardSize, inarow);
+                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                canMove = true;
                 break;
             }
             case MODE_MULTIPLAYER_SHARED: {
                 gameView.makeBoard(boardSize, inarow);
+                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                 canMove = true;
                 break;
             }
