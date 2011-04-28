@@ -241,7 +241,7 @@ public class GameBoardTest {
      * Test 6x6 game with row win
      */
     @Test
-    public void testGame6x6() {
+    public void testGame6x6_RowWin() {
         final GameBoard b = new GameBoard(6, 5);
         assertEquals(VALID_MOVE, b.put(3, 1, PLAYER2));
         assertEquals(PLAYER2, b.get(3, 1));
@@ -291,7 +291,7 @@ public class GameBoardTest {
      * Test 7x7 game with row win
      */
     @Test
-    public void testGame7x7() {
+    public void testGame7x7_RowWin() {
         final GameBoard b = new GameBoard(7, 6);
         assertEquals(VALID_MOVE, b.put(3, 1, PLAYER2));
         assertEquals(PLAYER2, b.get(3, 1));
@@ -347,7 +347,7 @@ public class GameBoardTest {
      * Test 7x7 game with empty sequences
      */
     @Test
-    public void testGame7x7_SequenceWithEmpty() {
+    public void testGame7x7_RowWinWithEmpty() {
         final GameBoard b = new GameBoard(7, 4);
         assertEquals(VALID_MOVE, b.put(6, 1, PLAYER2));
         assertEquals(PLAYER2, b.get(6, 1));
@@ -409,7 +409,7 @@ public class GameBoardTest {
      * Test 7x7 game with empty sequences
      */
     @Test
-    public void testGame7x7_DiagonalSequenceWithEmpty() {
+    public void testGame7x7_ReverseDiagonalWinWithEmpty() {
         final GameBoard b = new GameBoard(7, 4);
         assertEquals(VALID_MOVE, b.put(6, 1, PLAYER2));
         assertEquals(PLAYER2, b.get(6, 1));
