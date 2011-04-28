@@ -18,7 +18,6 @@ public class GameView extends View {
     private int offsetY;
     private final int boardSize;
     private final GameBoard board;
-    private int selectedCell = -1;
     private GamePlayer selectedValue = GamePlayer.EMPTY;
     private final Rect srcRect = new Rect();
     private final Rect dstRect = new Rect();
@@ -98,6 +97,7 @@ public class GameView extends View {
             for (int i = 0, x = x7; i < boardSize; i++, k++, x += sxy) {
                 dstRect.offsetTo(MARGIN + x, MARGIN + y);
                 GamePlayer v;
+                int selectedCell = -1;
                 if (selectedCell == k) {
                     v = selectedValue;
                 } else {
