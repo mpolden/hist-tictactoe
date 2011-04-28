@@ -11,8 +11,6 @@ public class GameBoard {
     private static final int MIN_IN_ROW = 3;
     private int lengthToWin;
     private int moveCount;
-    private int x;
-    private int y;
     private GamePlayer[][] board;
     private GamePlayer previousPlayer;
     private GamePlayer currentPlayer;
@@ -75,8 +73,6 @@ public class GameBoard {
         }
         if (board[x][y] == GamePlayer.EMPTY) {
             board[x][y] = p;
-            this.x = x;
-            this.y = y;
             this.previousPlayer = p;
             moveCount++;
             return GameState.VALID_MOVE;

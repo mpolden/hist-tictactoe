@@ -12,8 +12,6 @@ import android.widget.Spinner;
 public class OptionsActivity extends Activity {
 
     public static final String PREFS_NAME = "Prefs";
-    private Spinner boardsizeSpinner;
-    private Spinner inarowSpinner;
     private int boardSize;
     private int inarow;
     private ArrayAdapter<Integer> inarowAdapter;
@@ -24,14 +22,14 @@ public class OptionsActivity extends Activity {
         setContentView(R.layout.options);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         boardSize = settings.getInt("boardSize", 3);
-        boardsizeSpinner = (Spinner) findViewById(R.id.spinner_boardsize);
+        Spinner boardsizeSpinner = (Spinner) findViewById(R.id.spinner_boardsize);
         ArrayAdapter<CharSequence> boardSizeAdapter = ArrayAdapter.createFromResource(this, R.array.boardsize_array, android.R.layout.simple_spinner_item);
         boardSizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         boardsizeSpinner.setAdapter(boardSizeAdapter);
         boardsizeSpinner.setOnItemSelectedListener(new BoardSizeSelectionListener());
         boardsizeSpinner.setSelection(boardSize - 3);
         inarow = settings.getInt("inarow", boardSize);
-        inarowSpinner = (Spinner) findViewById(R.id.spinner_inarow);
+        Spinner inarowSpinner = (Spinner) findViewById(R.id.spinner_inarow);
         inarowAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item);
         inarowAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         inarowSpinner.setAdapter(inarowAdapter);

@@ -29,7 +29,6 @@ public class GameActivity extends Activity {
     private static final int PORT = 8080;
     private static final String INIT_REQUEST = "init";
     private static final String INIT_RESPONSE_OK = "init ok";
-    private static final String GAME_WON = "won";
     private GameView gameView;
     private TextView status;
     private int mode;
@@ -80,7 +79,7 @@ public class GameActivity extends Activity {
     }
 
     private void createGameView(int boardSize, int inRow) {
-        this.gameView = new GameView(this, null, boardSize, inRow);
+        this.gameView = new GameView(this, boardSize, inRow);
         this.gameView.setFocusable(true);
         this.gameView.setFocusableInTouchMode(true);
         this.gameView.setOnTouchListener(new View.OnTouchListener() {

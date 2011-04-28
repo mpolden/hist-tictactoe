@@ -12,7 +12,4 @@ public enum GameState {
         this.value = value;
     }
 
-    public int getValue() {
-        return value;
-    }
 }

@@ -4,30 +4,28 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
-import android.view.SurfaceView;
 import android.view.View;
 
 public class GameView extends View {
 
     private static final int MARGIN = 0;
-    private Paint linePaint;
-    private Paint bmpPaint;
-    private Bitmap bmpPlayer1;
-    private Bitmap bmpPlayer2;
+    private final Paint linePaint;
+    private final Paint bmpPaint;
+    private final Bitmap bmpPlayer1;
+    private final Bitmap bmpPlayer2;
     private int sxy;
     private int offsetX;
     private int offsetY;
-    private int boardSize;
-    private GameBoard board;
+    private final int boardSize;
+    private final GameBoard board;
     private int selectedCell = -1;
     private GamePlayer selectedValue = GamePlayer.EMPTY;
     private final Rect srcRect = new Rect();
     private final Rect dstRect = new Rect();
-    Drawable drawableBg;
+    final Drawable drawableBg;
 
-    public GameView(Context context, AttributeSet attrs, int boardSize, int inRow) {
-        super(context, attrs);
+    public GameView(Context context, int boardSize, int inRow) {
+        super(context, null);
         this.boardSize = boardSize;
         this.board = new GameBoard(boardSize, inRow);
         requestFocus();
@@ -52,22 +50,6 @@ public class GameView extends View {
 
     public int getBoardSize() {
         return boardSize;
-    }
-
-    public int getSelectedCell() {
-        return selectedCell;
-    }
-
-    public void setSelectedCell(int selectedCell) {
-        this.selectedCell = selectedCell;
-    }
-
-    public GamePlayer getSelectedValue() {
-        return selectedValue;
-    }
-
-    public void setSelectedValue(GamePlayer selectedValue) {
-        this.selectedValue = selectedValue;
     }
 
     @Override
