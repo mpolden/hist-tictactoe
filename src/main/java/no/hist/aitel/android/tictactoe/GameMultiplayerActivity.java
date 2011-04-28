@@ -30,7 +30,7 @@ public class GameMultiplayerActivity extends Activity {
     private static final int PORT = 8080;
     private static final String INIT_REQUEST = "init";
     private static final String INIT_RESPONSE_OK = "init ok";
-    private static final int INIT_DRAW_DELAY = 100;
+    private static final int INIT_DRAW_DELAY = 500;
     private GameView gameView;
     private TextView status;
     private int mode;
@@ -209,14 +209,14 @@ public class GameMultiplayerActivity extends Activity {
                         clientOut.println(INIT_RESPONSE_OK);
                         gameView.makeBoard(boardParams[0], boardParams[1]);
                         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                        gameView.postInvalidateDelayed(INIT_DRAW_DELAY);
                     } else {
                         final int[] xy = parseMove(line);
                         gameView.getBoard().put(xy[0], xy[1], GamePlayer.PLAYER1);
                         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
-                        gameView.postInvalidate();
+                        //gameView.postInvalidate();
                         canMove = true;
                     }
+                    gameView.postInvalidateDelayed(INIT_DRAW_DELAY);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "IOException", e);
