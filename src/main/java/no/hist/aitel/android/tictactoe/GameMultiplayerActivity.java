@@ -207,6 +207,7 @@ public class GameMultiplayerActivity extends Activity {
                         final int[] boardParams = parseSize(line);
                         clientOut.println(INIT_RESPONSE_OK);
                         gameView.makeBoard(boardParams[0], boardParams[1]);
+
                         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                     } else {
                         final int[] xy = parseMove(line);
