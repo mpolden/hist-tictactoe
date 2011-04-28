@@ -28,10 +28,10 @@ public class GameBoard {
         }
         if (lengthToWin < MIN_IN_ROW) {
             throw new IllegalArgumentException(
-                    String.format("Minimum in row is %d", MIN_IN_ROW));
+                    String.format("Minimum length to win is %d", MIN_IN_ROW));
         }
         if (lengthToWin > size) {
-            throw new IllegalArgumentException("Number of in row can't be larger than board size");
+            throw new IllegalArgumentException("Length to win can't be larger than board size");
         }
         this.board = new GamePlayer[size][size];
         this.lengthToWin = lengthToWin;
