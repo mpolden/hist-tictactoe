@@ -12,6 +12,7 @@ import android.widget.Spinner;
 public class OptionsActivity extends Activity {
 
     public static final String PREFS_NAME = "Prefs";
+    public static final int MIN_BOARDSIZE = 3;
     private Spinner boardsizeSpinner;
     private Spinner inRowSpinner;
     private int boardSize;
@@ -22,21 +23,28 @@ public class OptionsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.options);
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        boardSize = settings.getInt("boardSize", 3);
         boardsizeSpinner = (Spinner) findViewById(R.id.spinner_boardsize);
         ArrayAdapter<CharSequence> boardSizeAdapter = ArrayAdapter.createFromResource(this, R.array.boardsize_array, android.R.layout.simple_spinner_item);
         boardSizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         boardsizeSpinner.setAdapter(boardSizeAdapter);
         boardsizeSpinner.setOnItemSelectedListener(new BoardSizeSelectionListener());
-        boardsizeSpinner.setSelection(boardSize - 3);
-        inRow = settings.getInt("inRow", boardSize);
         inRowSpinner = (Spinner) findViewById(R.id.spinner_inarow);
         inRowAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item);
         inRowAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         inRowSpinner.setAdapter(inRowAdapter);
-        inRowSpinner.setOnItemSelectedListener(new InarowSelectionListener());
-        inRowSpinner.setSelection(inRow - 3);
+        inRowSpinner.setOnItemSelectedListener(new InarowSelectionListener());        
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        boardSize = settings.getInt("boardSize", MIN_BOARDSIZE);
+        boardsizeSpinner.setSelection(boardSize - MIN_BOARDSIZE);
+        inRow = settings.getInt("inRow", boardSize);
+        inRowSpinner.setSelection(inRow - MIN_BOARDSIZE);
+
+
     }
 
     private class BoardSizeSelectionListener implements AdapterView.OnItemSelectedListener {
@@ -44,6 +52,7 @@ public class OptionsActivity extends Activity {
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             boardSize = pos + 3;
             updateInarowAdapter();
+            inRowSpinner.setSelection(inRow - 3);
         }
 
         public void onNothingSelected(AdapterView parent) {
@@ -67,6 +76,7 @@ public class OptionsActivity extends Activity {
         }
     }
 
+    @Override
     protected void onStop() {
         super.onStop();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
