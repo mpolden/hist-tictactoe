@@ -82,14 +82,13 @@ public class GameActivity extends Activity {
                 break;
             }
         }
-        updateStatus();
     }
 
     private void updateStatus() {
         GamePlayer player = gameView.getBoard().getCurrentPlayer();
-        if(player == GamePlayer.PLAYER1) {
+        if (player == GamePlayer.PLAYER1) {
             status.setImageDrawable(getResources().getDrawable(R.drawable.xturn));
-        } else if(player == GamePlayer.PLAYER2) {
+        } else if (player == GamePlayer.PLAYER2) {
             status.setImageDrawable(getResources().getDrawable(R.drawable.oturn));
         }
     }
@@ -113,7 +112,7 @@ public class GameActivity extends Activity {
                             GamePlayer player = gameView.getBoard().getCurrentPlayer();
                             putPlayer(x, y, player);
                             updateState(player);
-                            
+
                         }
                     }
                     return true;
@@ -166,10 +165,10 @@ public class GameActivity extends Activity {
         switch (s) {
             case WIN: {
                 gameView.setEnabled(false);
-                if(player == GamePlayer.PLAYER1) {
+                if (player == GamePlayer.PLAYER1) {
                     status.setImageDrawable(getResources().getDrawable(R.drawable.xwins));
                     break;
-                } else if(player == GamePlayer.PLAYER2) {
+                } else if (player == GamePlayer.PLAYER2) {
                     status.setImageDrawable(getResources().getDrawable(R.drawable.owins));
                     break;
                 }
@@ -262,7 +261,9 @@ public class GameActivity extends Activity {
                                 gameView.setEnabled(true);
                                 updateState(gameView.getBoard().getCurrentPlayer());
                                 gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
-                                updateStatus();
+                                if (gameView.getBoard().getState() == GameState.NEUTRAL) {
+                                    updateStatus();
+                                }
                             }
                         });
                         gameView.postInvalidate();
@@ -330,7 +331,9 @@ public class GameActivity extends Activity {
                                     gameView.setEnabled(true);
                                     updateState(gameView.getBoard().getCurrentPlayer());
                                     gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                                    updateStatus();
+                                    if (gameView.getBoard().getState() == GameState.NEUTRAL) {
+                                        updateStatus();
+                                    }
                                 }
                             });
                         }
