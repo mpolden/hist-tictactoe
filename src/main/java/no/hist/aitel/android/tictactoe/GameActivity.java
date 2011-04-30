@@ -11,6 +11,7 @@ import android.text.format.Formatter;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -33,7 +34,8 @@ public class GameActivity extends Activity {
 
     private GameView gameView;
     private LinearLayout gameViewHolder;
-    private TextView status;
+    private TextView textStatus;
+    private ImageView status;
     private int mode;
     private int boardSize;
     private int inRow;
@@ -54,7 +56,8 @@ public class GameActivity extends Activity {
         this.localIp = findIpAddress();
         this.boardSize = settings.getInt("boardSize", 3);
         this.inRow = settings.getInt("inRow", boardSize);
-        this.status = (TextView) findViewById(R.id.status);
+        this.textStatus = (TextView) findViewById(R.id.status);
+        this.status = (ImageView) findViewById(R.id.imageview_status);
         this.gameViewHolder = (LinearLayout) findViewById(R.id.game_view_holder);
         switch (mode) {
             case MODE_SINGLEPLAYER: {
@@ -65,6 +68,7 @@ public class GameActivity extends Activity {
             case MODE_MULTIPLAYER_SHARED: {
                 createGameView(boardSize, inRow);
                 gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                updateStatus();
                 break;
             }
             case MODE_MULTIPLAYER_HOST: {
@@ -77,6 +81,16 @@ public class GameActivity extends Activity {
                 clientThread.start();
                 break;
             }
+        }
+        updateStatus();
+    }
+
+    private void updateStatus() {
+        GamePlayer player = gameView.getBoard().getCurrentPlayer();
+        if(player == GamePlayer.PLAYER1) {
+            status.setImageDrawable(getResources().getDrawable(R.drawable.xturn));
+        } else if(player == GamePlayer.PLAYER2) {
+            status.setImageDrawable(getResources().getDrawable(R.drawable.oturn));
         }
     }
 
@@ -99,6 +113,7 @@ public class GameActivity extends Activity {
                             GamePlayer player = gameView.getBoard().getCurrentPlayer();
                             putPlayer(x, y, player);
                             updateState(player);
+                            
                         }
                     }
                     return true;
@@ -123,12 +138,11 @@ public class GameActivity extends Activity {
                 if (gameView.getBoard().getState() == GameState.NEUTRAL) {
                     if (gameView.getBoard().getCurrentPlayer() == GamePlayer.PLAYER1) {
                         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
-                        status.setText("Player 2's turn");
                     } else {
                         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
-                        status.setText("Player 1's turn");
                     }
                 }
+                updateStatus();
                 break;
             }
             case MODE_MULTIPLAYER_HOST: {
@@ -152,13 +166,17 @@ public class GameActivity extends Activity {
         switch (s) {
             case WIN: {
                 gameView.setEnabled(false);
-                status.setText(String.format(getResources().getString(R.string.win),
-                        player.toString()));
-                break;
+                if(player == GamePlayer.PLAYER1) {
+                    status.setImageDrawable(getResources().getDrawable(R.drawable.xwins));
+                    break;
+                } else if(player == GamePlayer.PLAYER2) {
+                    status.setImageDrawable(getResources().getDrawable(R.drawable.owins));
+                    break;
+                }
             }
             case DRAW: {
                 gameView.setEnabled(false);
-                status.setText(R.string.draw);
+                status.setImageDrawable(getResources().getDrawable(R.drawable.draw));
                 break;
             }
         }
@@ -177,7 +195,7 @@ public class GameActivity extends Activity {
                 Log.d(TAG, "Sent init request");
                 out.printf("%s %d %d\n", INIT_REQUEST, boardSize, inRow);
             } else {
-                status.setText(s);
+                textStatus.setText(s);
             }
         }
     };
@@ -231,6 +249,7 @@ public class GameActivity extends Activity {
                             public void run() {
                                 createGameView(boardParams[0], boardParams[1]);
                                 gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                                updateStatus();
                                 gameView.setEnabled(false);
                             }
                         });
@@ -243,6 +262,7 @@ public class GameActivity extends Activity {
                                 gameView.setEnabled(true);
                                 updateState(gameView.getBoard().getCurrentPlayer());
                                 gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
+                                updateStatus();
                             }
                         });
                         gameView.postInvalidate();
@@ -297,6 +317,7 @@ public class GameActivity extends Activity {
                                 @Override
                                 public void run() {
                                     gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                                    updateStatus();
                                     gameView.setEnabled(true);
                                 }
                             });
@@ -309,6 +330,7 @@ public class GameActivity extends Activity {
                                     gameView.setEnabled(true);
                                     updateState(gameView.getBoard().getCurrentPlayer());
                                     gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                                    updateStatus();
                                 }
                             });
                         }

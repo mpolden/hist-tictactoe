@@ -8,7 +8,8 @@ import android.view.View;
 
 public class GameView extends View {
 
-    private static final int MARGIN = 0;
+    private static final int MARGIN = 4;
+    private static final int LINE_STROKE_WIDTH = 5;
     private final Paint linePaint;
     private final Paint bmpPaint;
     private final Bitmap bmpPlayer1;
@@ -30,16 +31,15 @@ public class GameView extends View {
         requestFocus();
         drawableBg = getResources().getDrawable(R.drawable.lib_bg);
         setBackgroundDrawable(drawableBg);
-        //setWillNotDraw(false);
-        bmpPlayer1 = getResBitmap(R.drawable.cross);
-        bmpPlayer2 = getResBitmap(R.drawable.circle);
+        bmpPlayer1 = getResBitmap(R.drawable.crossblue);
+        bmpPlayer2 = getResBitmap(R.drawable.circlered);
         if (bmpPlayer1 != null) {
             srcRect.set(0, 0, bmpPlayer1.getWidth() - 1, bmpPlayer1.getHeight() - 1);
         }
         bmpPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         linePaint = new Paint();
         linePaint.setColor(0xFFFFFFFF);
-        linePaint.setStrokeWidth(5);
+        linePaint.setStrokeWidth(LINE_STROKE_WIDTH);
         linePaint.setStyle(Paint.Style.STROKE);
     }
 
@@ -125,8 +125,6 @@ public class GameView extends View {
         Resources res = getResources();
         Bitmap bmp = BitmapFactory.decodeResource(res, bmpResId, opts);
         if (bmp == null && isInEditMode()) {
-            // BitmapFactory.decodeResource doesn't work from the rendering
-            // library in Eclipse's Graphical Layout Editor. Use this workaround instead.
             Drawable d = res.getDrawable(bmpResId);
             int w = d.getIntrinsicWidth();
             int h = d.getIntrinsicHeight();
