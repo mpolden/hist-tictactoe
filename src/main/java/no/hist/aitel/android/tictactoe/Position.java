@@ -5,15 +5,28 @@ public class Position {
     private int x;
     private int y;
 
+    /**
+     * Keeps track of x and y coordinates of a position
+     * @param x
+     * @param y
+     */
     public Position(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * Gets the x coordinate
+     * @return x coordinate
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Gets the y coordinate
+     * @return y coordinate
+     */
     public int getY() {
         return y;
     }

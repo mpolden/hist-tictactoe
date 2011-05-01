@@ -24,6 +24,12 @@ public class GameView extends View {
     private final Rect dstRect = new Rect();
     final Drawable drawableBg;
 
+    /**
+     * GameView handles the drawing of the board and keeps track of the GameBoard
+     * @param context
+     * @param boardSize
+     * @param inRow
+     */
     public GameView(Context context, int boardSize, int inRow) {
         super(context, null);
         this.boardSize = boardSize;
@@ -43,14 +49,29 @@ public class GameView extends View {
         linePaint.setStyle(Paint.Style.STROKE);
     }
 
+    /**
+     * Gets the GameView's game board
+     * @return GameBoard
+     */
     public GameBoard getBoard() {
         return board;
     }
 
+    /**
+     * Get the n size of the game board.
+     * @return Game board size
+     */
     public int getBoardSize() {
         return boardSize;
     }
 
+    /**
+     * Calculates the size and updates parameters after it
+     * @param w
+     * @param h
+     * @param oldw
+     * @param oldh
+     */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -66,6 +87,11 @@ public class GameView extends View {
         dstRect.set(MARGIN, MARGIN, size - MARGIN, size - MARGIN);
     }
 
+    /**
+     * Gets the width and height from MeasureSpec and sets dimension thereafter
+     * @param widthMeasureSpec
+     * @param heightMeasureSpec
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // keep the view squared
@@ -75,10 +101,18 @@ public class GameView extends View {
         setMeasuredDimension(d, d);
     }
 
+    /**
+     * Gets sxy
+     * @return sxy
+     */
     public int getSxy() {
         return sxy;
     }
 
+    /**
+     * Handles the drawing of the view on canvas
+     * @param canvas
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         if (board == null) {
@@ -119,6 +153,11 @@ public class GameView extends View {
         }
     }
 
+    /**
+     * Gets bitmap of given bmp src.
+     * @param bmpResId
+     * @return bmp
+     */
     private Bitmap getResBitmap(int bmpResId) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inDither = false;

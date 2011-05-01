@@ -101,6 +101,9 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Updates the status text to the current player
+     */
     private void updateStatus() {
         GamePlayer player = gameView.getBoard().getCurrentPlayer();
         if (player == GamePlayer.PLAYER1) {
@@ -110,6 +113,11 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Creates the GameView and attaches an onTouchListener which handles the coordinates a player clicks.
+     * @param boardSize
+     * @param inRow
+     */
     private void createGameView(int boardSize, int inRow) {
         this.gameView = new GameView(this, boardSize, inRow);
         this.gameView.setFocusable(true);
@@ -139,6 +147,12 @@ public class GameActivity extends Activity {
         gameViewHolder.addView(gameView);
     }
 
+    /**
+     * Does a move on x and y if it is valid
+     * @param x
+     * @param y
+     * @param player
+     */
     private void putPlayer(int x, int y, GamePlayer player) {
         if (gameView.getBoard().put(x, y, player) == GameState.INVALID_MOVE) {
             return;
@@ -183,7 +197,7 @@ public class GameActivity extends Activity {
             }
         }
         updateStatus();
-        if(mode != MODE_SINGLEPLAYER) {
+        if (mode != MODE_SINGLEPLAYER) {
             updateState(player);
         } else {
             updateState(gameView.getBoard().getCurrentPlayer());
@@ -191,6 +205,10 @@ public class GameActivity extends Activity {
         gameView.invalidate();
     }
 
+    /**
+     * Updates the state of the game if it is a WIN or DRAW, and then shows a play again button.
+     * @param player
+     */
     private void updateState(GamePlayer player) {
         GameState s = gameView.getBoard().getState();
         switch (s) {
@@ -214,6 +232,9 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Creates a Button for play again after a WIN or DRAW.
+     */
     private void setupPlayAgain() {
         replay.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -242,6 +263,9 @@ public class GameActivity extends Activity {
         gameViewLayout.addView(replay);
     }
 
+    /**
+     * Deletes the current gameView and attaches a new one. Also removes the play again button.
+     */
     private void playAgain() {
         gameViewHolder.removeView(gameView);
         createGameView(boardSize, inRow);
@@ -250,11 +274,18 @@ public class GameActivity extends Activity {
         gameViewLayout.removeView(replay);
     }
 
+    /**
+     * Get the device WIFI IP-address
+     * @return IP-address of the device
+     */
     private String findIpAddress() {
         final WifiInfo wifiInfo = ((WifiManager) getSystemService(WIFI_SERVICE)).getConnectionInfo();
         return Formatter.formatIpAddress(wifiInfo.getIpAddress());
     }
 
+    /**
+     * A Handler that handles the initial request for network play
+     */
     private final Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -268,6 +299,10 @@ public class GameActivity extends Activity {
         }
     };
 
+    /**
+     * Sends a message through the handler.
+     * @param s
+     */
     private void sendMessage(String s) {
         final Message msg = handler.obtainMessage();
         final Bundle bundle = new Bundle();
@@ -280,16 +315,29 @@ public class GameActivity extends Activity {
         sendMessage(getResources().getString(resId));
     }
 
+    /**
+     * Parses the size of the game Board from string
+     * @param line
+     * @return Board size
+     */
     private int[] parseSize(String line) {
         String[] words = line.split(" ");
         return new int[]{Integer.parseInt(words[1]), Integer.parseInt(words[2])};
     }
 
+    /**
+     * Parses the x and y coordinate from the given string
+     * @param line
+     * @return Integer[] containing x and y data of a move.
+     */
     private int[] parseMove(String line) {
         String[] words = line.split(" ");
         return new int[]{Integer.parseInt(words[0]), Integer.parseInt(words[1])};
     }
 
+    /**
+     * Client thread
+     */
     private final Thread clientThread = new Thread() {
         @Override
         public void run() {
@@ -357,6 +405,10 @@ public class GameActivity extends Activity {
             }
         }
     };
+
+    /**
+     * Server thread
+     */
     private final Thread serverThread = new Thread() {
         @Override
         public void run() {
@@ -437,6 +489,11 @@ public class GameActivity extends Activity {
         }
     };
 
+    /**
+     * Closes Reader in and Writer out
+     * @param in
+     * @param out
+     */
     private void closeInAndOut(Reader in, Writer out) {
         if (in != null) {
             try {
@@ -454,6 +511,9 @@ public class GameActivity extends Activity {
         }
     }
 
+    /**
+     * Closes the client socket and server socket onStop()
+     */
     @Override
     protected void onStop() {
         super.onStop();

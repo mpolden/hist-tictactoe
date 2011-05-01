@@ -45,6 +45,9 @@ public class OptionsActivity extends Activity {
         inRowSpinner.setSelection(inRow - MIN_BOARDSIZE);
     }
 
+    /**
+     * Handles selection of board size
+     */
     private class BoardSizeSelectionListener implements AdapterView.OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             boardSize = pos + 3;
@@ -56,6 +59,9 @@ public class OptionsActivity extends Activity {
         }
     }
 
+    /**
+     * Handles selection of inRow
+     */
     private class InarowSelectionListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -66,6 +72,9 @@ public class OptionsActivity extends Activity {
         }
     }
 
+    /**
+     * Updates inRowAdapter with the possible data
+     */
     private void updateInarowAdapter() {
         inRowAdapter.clear();
         for (int i = 3; i <= boardSize; i++) {
@@ -73,6 +82,9 @@ public class OptionsActivity extends Activity {
         }
     }
 
+    /**
+     * Stores board size and inRow when onStop() is called
+     */
     @Override
     protected void onStop() {
         super.onStop();
