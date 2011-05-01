@@ -75,7 +75,8 @@ public class GameActivity extends Activity {
         switch (mode) {
             case MODE_SINGLEPLAYER: {
                 createGameView(boardSize, inRow);
-                AI = new GameAI(gameView.getBoard(), GameAI.EASY);
+                int difficulty = getIntent().getExtras().getInt("difficulty");
+                AI = new GameAI(gameView.getBoard(), difficulty);
                 gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                 updateStatus();
                 break;

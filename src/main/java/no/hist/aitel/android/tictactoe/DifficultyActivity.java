@@ -18,6 +18,7 @@ public class DifficultyActivity extends Activity {
             public void onClick(View v) {
                 final Intent intent = new Intent(getApplicationContext(), GameActivity.class);
                 intent.putExtra("mode", GameActivity.MODE_SINGLEPLAYER);
+                intent.putExtra("difficulty", GameAI.EASY);
                 startActivity(intent);
             }
         });
