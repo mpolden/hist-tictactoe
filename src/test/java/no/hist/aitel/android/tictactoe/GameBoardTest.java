@@ -164,6 +164,9 @@ public class GameBoardTest {
         assertEquals(NEUTRAL, b.getState());
         assertEquals(VALID_MOVE, b.put(2, 2, PLAYER2));
         assertEquals(PLAYER2, b.get(2, 2));
+        assertEquals(NEUTRAL, b.getState());
+        assertEquals(VALID_MOVE, b.put(1, 2, PLAYER1));
+        assertEquals(PLAYER1, b.get(1, 2));
         assertEquals(DRAW, b.getState());
     }
 
