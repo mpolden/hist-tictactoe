@@ -38,13 +38,17 @@ public class GameActivity extends Activity {
     private static final String INIT_RESPONSE_OK = "init ok";
 
     private GameView gameView;
+    private LinearLayout gameViewLayout;
     private LinearLayout gameViewHolder;
     private TextView textStatus;
     private TextView tv_lengthToWin;
     private ImageView status;
+    private Button replay;
+
     private int mode;
     private int boardSize;
     private int inRow;
+
     private String localIp;
     private String remoteIp;
     private ServerSocket serverSocket;
@@ -64,9 +68,11 @@ public class GameActivity extends Activity {
         this.inRow = settings.getInt("inRow", boardSize);
         this.textStatus = (TextView) findViewById(R.id.status);
         this.tv_lengthToWin = (TextView) findViewById(R.id.tv_lengthToWin);
+        this.replay = new Button(this);
         tv_lengthToWin.setText(String.format(getString(R.string.required_length_to_win, inRow)));
         this.status = (ImageView) findViewById(R.id.imageview_status);
         this.gameViewHolder = (LinearLayout) findViewById(R.id.game_view_holder);
+        this.gameViewLayout = (LinearLayout) findViewById(R.id.gameview_layout);
         switch (mode) {
             case MODE_SINGLEPLAYER: {
                 createGameView(boardSize, inRow);
@@ -192,8 +198,6 @@ public class GameActivity extends Activity {
     }
 
     private void setupPlayAgain() {
-        final LinearLayout gameViewLayout = (LinearLayout) findViewById(R.id.gameview_layout);
-        final Button replay = new Button(this);
         replay.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -201,18 +205,18 @@ public class GameActivity extends Activity {
         replay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameViewHolder.removeView(gameView);
                 playAgain();
-                gameViewLayout.removeView(replay);
             }
         });
         gameViewLayout.addView(replay);
     }
 
     private void playAgain() {
+        gameViewHolder.removeView(gameView);
         createGameView(boardSize, inRow);
         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
         updateStatus();
+        gameViewLayout.removeView(replay);
     }
 
     private String findIpAddress() {
