@@ -3,6 +3,7 @@ package no.hist.aitel.android.tictactoe;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -125,7 +126,9 @@ public class GameActivity extends Activity {
                     int y = (int) event.getY() / sxy;
                     if (gameView.isEnabled() && x >= 0 && x < gameView.getBoardSize() && y >= 0 & y < gameView.getBoardSize()) {
                         if (gameView.getBoard().get(x, y) == GamePlayer.EMPTY) {
-                            putPlayer(x, y, gameView.getBoard().getCurrentPlayer());
+                            GamePlayer player = gameView.getBoard().getCurrentPlayer();
+                            putPlayer(x, y, player);
+
                         }
                     }
                     return true;
@@ -180,7 +183,11 @@ public class GameActivity extends Activity {
             }
         }
         updateStatus();
-        updateState(gameView.getBoard().getCurrentPlayer());
+        if(mode != MODE_SINGLEPLAYER) {
+            updateState(player);
+        } else {
+            updateState(gameView.getBoard().getCurrentPlayer());
+        }
         gameView.invalidate();
     }
 
