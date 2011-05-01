@@ -2,6 +2,9 @@ package no.hist.aitel.android.tictactoe;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static no.hist.aitel.android.tictactoe.GamePlayer.*;
 import static no.hist.aitel.android.tictactoe.GameState.*;
 import static org.junit.Assert.assertEquals;
@@ -486,5 +489,29 @@ public class GameBoardTest {
         assertEquals(VALID_MOVE, b.put(1, 4, PLAYER1));
         assertEquals(PLAYER1, b.get(1, 4));
         assertEquals(WIN, b.getState());
+    }
+
+    @Test
+    public void testFindEmpty() {
+        final GameBoard b = new GameBoard(3, 3);
+        assertEquals(VALID_MOVE, b.put(0, 0, PLAYER1));
+        assertEquals(PLAYER1, b.get(0, 0));
+        assertEquals(VALID_MOVE, b.put(0, 2, PLAYER2));
+        assertEquals(PLAYER2, b.get(0, 2));
+        assertEquals(VALID_MOVE, b.put(2, 1, PLAYER1));
+        assertEquals(PLAYER1, b.get(2, 1));
+        assertEquals(VALID_MOVE, b.put(1, 1, PLAYER2));
+        assertEquals(PLAYER2, b.get(1, 1));
+        assertEquals(VALID_MOVE, b.put(2, 0, PLAYER1));
+        assertEquals(PLAYER1, b.get(2, 0));
+        assertEquals(VALID_MOVE, b.put(1, 0, PLAYER2));
+        assertEquals(PLAYER2, b.get(1, 0));
+        assertEquals(VALID_MOVE, b.put(0, 1, PLAYER1));
+        assertEquals(PLAYER1, b.get(0, 1));
+        final List<Position> expected = new ArrayList<Position>() {{
+            add(new Position(1, 2));
+            add(new Position(2, 2));
+        }};
+        assertEquals(expected, b.findEmpty());
     }
 }
