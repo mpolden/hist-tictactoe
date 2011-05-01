@@ -8,7 +8,7 @@ import android.view.View;
 
 public class GameView extends View {
 
-    private static final int MARGIN = 4;
+    private static final int MARGIN = 0;
     private static final int LINE_STROKE_WIDTH = 5;
     private final Paint linePaint;
     private final Paint bmpPaint;

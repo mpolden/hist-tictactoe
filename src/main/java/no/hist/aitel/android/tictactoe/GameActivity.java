@@ -13,10 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -36,6 +33,7 @@ public class GameActivity extends Activity {
     private static final int PORT = 8080;
     private static final String INIT_REQUEST = "init";
     private static final String INIT_RESPONSE_OK = "init ok";
+    private static final String NEW_GAME = "new game";
 
     private GameView gameView;
     private LinearLayout gameViewLayout;
@@ -206,6 +204,16 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View v) {
                 playAgain();
+                switch (mode) {
+                    case MODE_MULTIPLAYER_HOST: {
+                        out.printf(NEW_GAME);
+                        break;
+                    }
+                    case MODE_MULTIPLAYER_JOIN: {
+                        out.printf(NEW_GAME);
+                        break;
+                    }
+                }
             }
         });
         gameViewLayout.addView(replay);
@@ -284,10 +292,21 @@ public class GameActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                createGameView(boardParams[0], boardParams[1]);
+                                boardSize = boardParams[0];
+                                inRow = boardParams[1];
+                                tv_lengthToWin.setText(String.format(getString(R.string.required_length_to_win, inRow)));
+                                createGameView(boardSize, inRow);
                                 gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                                 updateStatus();
                                 gameView.setEnabled(false);
+                            }
+                        });
+                    } else if (NEW_GAME.equals(line)) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                playAgain();
+                                Toast.makeText(getApplicationContext(), "NEW GAME!", Toast.LENGTH_LONG);
                             }
                         });
                     } else {
@@ -358,6 +377,14 @@ public class GameActivity extends Activity {
                                     gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                                     updateStatus();
                                     gameView.setEnabled(true);
+                                }
+                            });
+                        } else if (NEW_GAME.equals(line)) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    playAgain();
+                                    Toast.makeText(getApplicationContext(), "NEW GAME!", Toast.LENGTH_LONG);
                                 }
                             });
                         } else {
