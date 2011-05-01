@@ -153,7 +153,6 @@ public class GameActivity extends Activity {
                         gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
                     }
                 }
-                updateStatus();
                 break;
             }
             case MODE_MULTIPLAYER_HOST: {
@@ -169,6 +168,7 @@ public class GameActivity extends Activity {
                 break;
             }
         }
+        updateStatus();
         gameView.invalidate();
     }
 
@@ -206,11 +206,12 @@ public class GameActivity extends Activity {
                 playAgain();
                 switch (mode) {
                     case MODE_MULTIPLAYER_HOST: {
-                        out.printf(NEW_GAME);
+                        out.println(NEW_GAME);
                         break;
                     }
                     case MODE_MULTIPLAYER_JOIN: {
-                        out.printf(NEW_GAME);
+                        gameView.setEnabled(false);
+                        out.println(NEW_GAME);
                         break;
                     }
                 }
@@ -306,7 +307,7 @@ public class GameActivity extends Activity {
                             @Override
                             public void run() {
                                 playAgain();
-                                Toast.makeText(getApplicationContext(), "NEW GAME!", Toast.LENGTH_LONG);
+                                gameView.setEnabled(false);
                             }
                         });
                     } else {
@@ -384,7 +385,7 @@ public class GameActivity extends Activity {
                                 @Override
                                 public void run() {
                                     playAgain();
-                                    Toast.makeText(getApplicationContext(), "NEW GAME!", Toast.LENGTH_LONG);
+                                    gameView.setEnabled(false);
                                 }
                             });
                         } else {

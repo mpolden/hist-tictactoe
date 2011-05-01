@@ -61,6 +61,24 @@ public class GameBoard {
     }
 
     /**
+     * Get board
+     *
+     * @return Board
+     */
+    public GamePlayer[][] getBoard() {
+        return board;
+    }
+
+    /**
+     * Get the length required to win
+     *
+     * @return lengthToWin
+     */
+    public int getLengthToWin() {
+        return lengthToWin;
+    }
+
+    /**
      * Set the position to the given previousPlayer
      *
      * @param x      X coordinate
