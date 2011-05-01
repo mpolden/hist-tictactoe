@@ -42,6 +42,7 @@ public class GameActivity extends Activity {
     private TextView tv_lengthToWin;
     private ImageView status;
     private Button replay;
+    private GameAI AI;
 
     private int mode;
     private int boardSize;
@@ -74,7 +75,9 @@ public class GameActivity extends Activity {
         switch (mode) {
             case MODE_SINGLEPLAYER: {
                 createGameView(boardSize, inRow);
+                AI = new GameAI(gameView.getBoard(), GameAI.EASY);
                 gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                updateStatus();
                 break;
             }
             case MODE_MULTIPLAYER_SHARED: {
@@ -121,10 +124,7 @@ public class GameActivity extends Activity {
                     int y = (int) event.getY() / sxy;
                     if (gameView.isEnabled() && x >= 0 && x < gameView.getBoardSize() && y >= 0 & y < gameView.getBoardSize()) {
                         if (gameView.getBoard().get(x, y) == GamePlayer.EMPTY) {
-                            GamePlayer player = gameView.getBoard().getCurrentPlayer();
-                            putPlayer(x, y, player);
-                            updateState(player);
-
+                            putPlayer(x, y, gameView.getBoard().getCurrentPlayer());
                         }
                     }
                     return true;
@@ -141,8 +141,18 @@ public class GameActivity extends Activity {
         }
         switch (mode) {
             case MODE_SINGLEPLAYER: {
-                gameView.setEnabled(false);
-                gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
+                if (gameView.getBoard().getState() == GameState.NEUTRAL) {
+                    if (gameView.getBoard().getCurrentPlayer() == GamePlayer.PLAYER1) {
+                        gameView.setEnabled(false);
+                        gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER2);
+                        Position AImove = AI.getMove();
+                        putPlayer(AImove.getX(), AImove.getY(), gameView.getBoard().getCurrentPlayer());
+                        return;
+                    } else {
+                        gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+                        gameView.setEnabled(true);
+                    }
+                }
                 break;
             }
             case MODE_MULTIPLAYER_SHARED: {
@@ -169,6 +179,7 @@ public class GameActivity extends Activity {
             }
         }
         updateStatus();
+        updateState(gameView.getBoard().getCurrentPlayer());
         gameView.invalidate();
     }
 
@@ -213,6 +224,9 @@ public class GameActivity extends Activity {
                         gameView.setEnabled(false);
                         out.println(NEW_GAME);
                         break;
+                    }
+                    case MODE_SINGLEPLAYER: {
+                        AI = new GameAI(gameView.getBoard(), GameAI.EASY);
                     }
                 }
             }

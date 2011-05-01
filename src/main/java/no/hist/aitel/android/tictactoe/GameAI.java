@@ -5,9 +5,9 @@ import java.util.Random;
 
 public class GameAI {
 
-    private static final int EASY = 0;
-    private static final int MEDIUM = 1;
-    private static final int HARD = 2;
+    public static final int EASY = 0;
+    public static final int MEDIUM = 1;
+    public static final int HARD = 2;
 
     private final Random random;
     private final GameBoard gameBoard;
