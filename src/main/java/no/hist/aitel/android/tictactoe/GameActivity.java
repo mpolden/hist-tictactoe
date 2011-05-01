@@ -247,6 +247,7 @@ public class GameActivity extends Activity {
                 switch (mode) {
                     case MODE_MULTIPLAYER_HOST: {
                         out.println(NEW_GAME);
+                        gameView.setEnabled(true);
                         break;
                     }
                     case MODE_MULTIPLAYER_JOIN: {
@@ -459,7 +460,7 @@ public class GameActivity extends Activity {
                                 @Override
                                 public void run() {
                                     playAgain();
-                                    gameView.setEnabled(false);
+                                    gameView.setEnabled(true);
                                 }
                             });
                         } else {
