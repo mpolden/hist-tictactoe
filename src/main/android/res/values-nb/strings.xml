@@ -9,4 +9,14 @@
         <item>7x7</item>
     </string-array>
     <string name="inarow">Antall brikker på rad</string>
+    <string name="join_game">Bli med</string>
+    <string name="host_game">Lag spill</string>
+    <string name="cancel">Avbryt</string>
+    <string name="host_game_dialog">Du lager nå et spill.\nDin IP-adresse er %s\nAndre spillere må bruke
+        denne
+        adressen for å spille med deg
+    </string>
+    <string name="join_game_dialog">Vennligst skriv inn IP-addressen til spilleren som lager spillet.</string>
+    <string name="waiting_for_player">Venter på spiller til å koble seg på %s</string>
+    <string name="required_length_to_win">Påkrevd antall på rad for å vinne er %s</string>
 </resources>

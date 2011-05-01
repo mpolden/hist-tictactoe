@@ -50,7 +50,7 @@ public class NetworkActivity extends Activity {
             case JOIN_DIALOG_ID: {
                 final Dialog joinDialog = new Dialog(NetworkActivity.this);
                 joinDialog.setContentView(R.layout.joingamedialog);
-                joinDialog.setTitle("Join game");
+                joinDialog.setTitle(getString(R.string.join_game));
                 joinDialog.setCancelable(true);
                 TextView tv_joingame = (TextView) joinDialog.findViewById(R.id.textview_joingame);
                 tv_joingame.setText(R.string.join_game_dialog);
@@ -78,7 +78,7 @@ public class NetworkActivity extends Activity {
             case HOST_DIALOG_ID: {
                 final Dialog hostDialog = new Dialog(NetworkActivity.this);
                 hostDialog.setContentView(R.layout.hostgamedialog);
-                hostDialog.setTitle("Host game");
+                hostDialog.setTitle(getString(R.string.host_game));
                 hostDialog.setCancelable(true);
                 TextView tv_hostgame = (TextView) hostDialog.findViewById(R.id.textview_hostgame);
                 tv_hostgame.setText(getResources().getString(R.string.host_game_dialog, ip));

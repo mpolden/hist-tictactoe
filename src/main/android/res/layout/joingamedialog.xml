@@ -17,9 +17,9 @@
                   android:layout_below="@id/edittext_ip"
                   android:gravity="center">
         <Button android:id="@+id/button_joingame_ok" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="Join Game"/>
+                android:layout_height="wrap_content" android:text="@string/join_game"/>
         <Button android:id="@+id/button_joingame_cancel"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Cancel"/>
+                android:text="@string/cancel"/>
     </LinearLayout>
 </RelativeLayout>

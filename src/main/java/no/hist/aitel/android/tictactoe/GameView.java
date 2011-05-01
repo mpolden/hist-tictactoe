@@ -29,7 +29,7 @@ public class GameView extends View {
         this.boardSize = boardSize;
         this.board = new GameBoard(boardSize, inRow);
         requestFocus();
-        drawableBg = getResources().getDrawable(R.drawable.lib_bg);
+        drawableBg = getResources().getDrawable(R.drawable.boardbg);
         setBackgroundDrawable(drawableBg);
         bmpPlayer1 = getResBitmap(R.drawable.crossblue);
         bmpPlayer2 = getResBitmap(R.drawable.circlered);

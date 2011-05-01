@@ -1,6 +1,7 @@
 package no.hist.aitel.android.tictactoe;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -11,6 +12,8 @@ import android.text.format.Formatter;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +29,8 @@ public class GameActivity extends Activity {
     public static final int MODE_MULTIPLAYER_JOIN = 2;
     public static final int MODE_MULTIPLAYER_HOST = 3;
 
+    private static final int DEFAULT_BOARD_SIZE = 3;
+
     private static final String TAG = GameActivity.class.getSimpleName();
     private static final String PREFS_NAME = "Prefs";
     private static final int PORT = 8080;
@@ -35,6 +40,7 @@ public class GameActivity extends Activity {
     private GameView gameView;
     private LinearLayout gameViewHolder;
     private TextView textStatus;
+    private TextView tv_lengthToWin;
     private ImageView status;
     private int mode;
     private int boardSize;
@@ -54,9 +60,11 @@ public class GameActivity extends Activity {
         this.remoteIp = getIntent().getExtras().get("remoteIp") != null ?
                 getIntent().getExtras().get("remoteIp").toString() : null;
         this.localIp = findIpAddress();
-        this.boardSize = settings.getInt("boardSize", 3);
+        this.boardSize = settings.getInt("boardSize", DEFAULT_BOARD_SIZE);
         this.inRow = settings.getInt("inRow", boardSize);
         this.textStatus = (TextView) findViewById(R.id.status);
+        this.tv_lengthToWin = (TextView) findViewById(R.id.tv_lengthToWin);
+        tv_lengthToWin.setText(String.format(getString(R.string.required_length_to_win, inRow)));
         this.status = (ImageView) findViewById(R.id.imageview_status);
         this.gameViewHolder = (LinearLayout) findViewById(R.id.game_view_holder);
         switch (mode) {
@@ -165,6 +173,7 @@ public class GameActivity extends Activity {
         switch (s) {
             case WIN: {
                 gameView.setEnabled(false);
+                setupPlayAgain();
                 if (player == GamePlayer.PLAYER1) {
                     status.setImageDrawable(getResources().getDrawable(R.drawable.xwins));
                     break;
@@ -175,10 +184,35 @@ public class GameActivity extends Activity {
             }
             case DRAW: {
                 gameView.setEnabled(false);
+                setupPlayAgain();
                 status.setImageDrawable(getResources().getDrawable(R.drawable.draw));
                 break;
             }
         }
+    }
+
+    private void setupPlayAgain() {
+        final LinearLayout gameViewLayout = (LinearLayout) findViewById(R.id.gameview_layout);
+        final Button replay = new Button(this);
+        replay.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        replay.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_playagain));
+        replay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameViewHolder.removeView(gameView);
+                playAgain();
+                gameViewLayout.removeView(replay);
+            }
+        });
+        gameViewLayout.addView(replay);
+    }
+
+    private void playAgain() {
+        createGameView(boardSize, inRow);
+        gameView.getBoard().setCurrentPlayer(GamePlayer.PLAYER1);
+        updateStatus();
     }
 
     private String findIpAddress() {

@@ -5,19 +5,25 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:gravity="center_horizontal">
-
-    <TextView android:id="@+id/status"
-              android:layout_height="wrap_content"
-              android:layout_width="wrap_content"
-              android:textColor="@android:color/white"/>
-    <ImageView android:id="@+id/imageview_status"
-               android:layout_height="wrap_content"
-               android:layout_width="wrap_content"/>
-
-    <LinearLayout android:id="@+id/game_view_holder"
+    <LinearLayout android:id="@+id/gameview_layout"
+                  android:orientation="vertical"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:gravity="center_horizontal">
+        <TextView android:id="@+id/status"
                   android:layout_height="wrap_content"
                   android:layout_width="wrap_content"
-                  android:layout_margin="20dip"
-                  android:layout_weight="1"/>
-
+                  android:textColor="@android:color/white"/>
+        <ImageView android:id="@+id/imageview_status"
+                   android:layout_height="wrap_content"
+                   android:layout_width="wrap_content"/>
+        <LinearLayout android:id="@+id/game_view_holder"
+                      android:layout_height="wrap_content"
+                      android:layout_width="wrap_content"
+                      android:layout_margin="20dip"/>
+        <TextView android:id="@+id/tv_lengthToWin"
+                  android:layout_height="wrap_content"
+                  android:layout_width="wrap_content"
+                  android:layout_marginBottom="10dip"/>
+    </LinearLayout>
 </LinearLayout>

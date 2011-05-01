@@ -11,6 +11,7 @@
     <string name="inarow">Required pieces in a row</string>
     <string name="join_game">Join game</string>
     <string name="host_game">Host game</string>
+    <string name="cancel">Cancel</string>
     <string name="host_game_dialog">You are now hosting a game.\nYour IP address is %s\nOther players must use
         this
         address to play with you
@@ -24,6 +25,5 @@
     <string name="server_socket_failed">Could not start server.</string>
     <string name="client_socket_failed">Client connection failed.</string>
     <string name="could_not_connect">Could not connect to server.</string>
-    <string name="win">%s wins!</string>
-    <string name="draw">Draw</string>
+    <string name="required_length_to_win">Required length to win is %s</string>
 </resources>
