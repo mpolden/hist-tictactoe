@@ -2,6 +2,9 @@ package no.hist.aitel.android.tictactoe;
 
 import com.google.common.base.Strings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class handles board logic
  */
@@ -191,6 +194,23 @@ public class GameBoard {
         } else {
             return GameState.NEUTRAL;
         }
+    }
+
+    /**
+     * Find empty positions
+     *
+     * @return List of empty positions
+     */
+    public List<Position> findEmpty() {
+        final List<Position> empty = new ArrayList<Position>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == GamePlayer.EMPTY) {
+                    empty.add(new Position(i, j));
+                }
+            }
+        }
+        return empty;
     }
 
     /**
